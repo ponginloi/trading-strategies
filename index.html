@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>TradeWise Pro | Trading Platform</title>
+    <title>TradeWise Pro | Cloud Trading Platform</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,13 +15,11 @@
         .search-container { position: relative; flex: 1; max-width: 400px; }
         .search-input-wrapper { display: flex; align-items: center; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; padding: 6px 16px; }
         .search-input { flex: 1; background: transparent; border: none; color: white; font-size: 0.85rem; padding: 8px 0; outline: none; }
-        .search-input::placeholder { color: rgba(255,255,255,0.4); }
         .search-results { position: absolute; top: 100%; left: 0; right: 0; background: rgba(20,24,49,0.98); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-top: 8px; max-height: 300px; overflow-y: auto; z-index: 1000; display: none; }
         .search-results.show { display: block; }
-        .search-result-item { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .search-result-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .search-result-item:hover { background: rgba(79,70,229,0.3); }
         .result-symbol { font-weight: 600; }
-        .result-name { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
         .user-controls { display: flex; align-items: center; gap: 16px; }
         .user-name { background: rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; }
         .btn-icon { background: rgba(255,255,255,0.1); border: none; padding: 8px 16px; border-radius: 12px; color: white; cursor: pointer; }
@@ -92,6 +90,7 @@
         .modal-content { background: rgba(20,24,49,0.95); border-radius: 24px; padding: 32px; width: 90%; max-width: 400px; border: 1px solid rgba(255,255,255,0.2); }
         .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); padding: 12px 24px; border-radius: 40px; z-index: 2000; animation: fadeInUp 0.3s ease; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        .cloud-status { font-size: 0.7rem; margin-left: 8px; color: #4f46e5; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
@@ -102,14 +101,23 @@
     <div class="modal" id="authModal">
         <div class="modal-content">
             <h2 id="authTitle" style="margin-bottom: 24px; text-align: center;">Login to TradeWise Pro</h2>
+            <div style="margin-bottom: 16px; text-align: center;">
+                <span id="cloudConnectionStatus" style="font-size: 0.7rem; color: #f5a623;">⏳ Checking cloud connection...</span>
+            </div>
             <form id="authForm" onsubmit="return false;">
                 <input type="text" id="authUsername" placeholder="Username" class="input-field" style="margin-bottom: 12px;">
                 <input type="password" id="authPassword" placeholder="Password" class="input-field" style="margin-bottom: 20px;">
                 <button type="button" class="submit-btn" style="background: #4f46e5; margin-bottom: 12px;" id="authSubmitBtn">Login</button>
             </form>
-            <div style="text-align: center; font-size: 0.8rem; margin-top: 12px;">Demo: <strong>demo</strong> / <strong>demo123</strong></div>
             <div style="text-align: center; margin-top: 16px;">
                 <span id="authSwitch" style="color: #4f46e5; cursor: pointer;">📝 Create new account</span>
+            </div>
+            <!-- GitHub 配置 -->
+            <div class="github-section" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                <div style="font-size: 0.7rem; margin-bottom: 8px;">☁️ GitHub Cloud Settings</div>
+                <input type="text" id="githubRepo" class="input-field" placeholder="username/repo" style="margin-bottom: 6px; font-size: 0.7rem;">
+                <input type="password" id="githubToken" class="input-field" placeholder="GitHub Token" style="margin-bottom: 6px; font-size: 0.7rem;">
+                <div style="font-size: 0.6rem; color: rgba(255,255,255,0.4);">All data will be saved to GitHub cloud</div>
             </div>
         </div>
     </div>
@@ -117,7 +125,7 @@
     <!-- 主交易界面 -->
     <div class="trading-container hidden" id="mainApp">
         <div class="top-nav">
-            <div class="logo-area"><span class="logo">TradeWise Pro</span><span class="market-status">● Live</span></div>
+            <div class="logo-area"><span class="logo">TradeWise Pro</span><span class="market-status" id="apiStatus">● Cloud</span></div>
             <div class="search-container">
                 <div class="search-input-wrapper">
                     <span>🔍</span>
@@ -171,7 +179,7 @@
                 <button class="submit-btn buy" id="executeTradeBtn">Buy</button>
                 
                 <div class="ranking-container">
-                    <div style="margin-bottom: 8px;">🏆 Global Ranking</div>
+                    <div style="margin-bottom: 8px;">🏆 Global Ranking <span id="rankUpdateTime" style="font-size:0.6rem;"></span></div>
                     <div id="rankingList"></div>
                 </div>
                 
@@ -181,15 +189,10 @@
                     <div id="aiQuickAnswer" class="ai-answer">💡 Ask me anything!</div>
                 </div>
 
-                <div class="github-section">
-                    <div style="margin-bottom: 12px;">☁️ Cloud Sync</div>
-                    <input type="text" id="githubRepo" class="input-field" placeholder="username/repo" style="margin-bottom: 8px;">
-                    <input type="password" id="githubToken" class="input-field" placeholder="GitHub Token" style="margin-bottom: 8px;">
-                    <button id="syncDataBtn" class="submit-btn" style="background: #4f46e5;">💾 Save to Cloud</button>
-                    <button id="loadDataBtn" class="submit-btn" style="background: #24292e; margin-top: 8px;">📥 Load from Cloud</button>
+                <div class="portfolio-section">
+                    <div class="panel-header">💼 Positions <span id="saveStatus" class="cloud-status"></span></div>
+                    <div id="portfolioContainer"></div>
                 </div>
-
-                <div class="portfolio-section"><div class="panel-header">💼 Positions</div><div id="portfolioContainer"></div></div>
             </div>
         </div>
     </div>
@@ -198,15 +201,20 @@
         const FINNHUB_API_KEY = 'd8g3tj9r01qlgcuh34c0d8g3tj9r01qlgcuh34cg';
         const DEEPSEEK_API_KEY = "sk-1f33b84b5ed746d09628b7834fc32170";
         
+        // ============ 全局变量 ============
         let currentUser = null;
-        let users = {};
-        let portfolioData = {};
+        let currentRepo = '';
+        let currentToken = '';
         let watchlist = [];
         let selectedStock = null;
         let currentOrderType = 'buy';
         let klineChart = null;
         let refreshInterval = null;
         let currentTimeframe = '1M';
+        
+        // 云端数据结构
+        let cloudUsers = {};      // { username: { id, username, password, createdAt } }
+        let cloudPortfolios = {}; // { userId: { balance, holdings, transactions } }
 
         const stockDatabase = [
             { symbol: 'AAPL', name: 'Apple Inc.' }, { symbol: 'MSFT', name: 'Microsoft' },
@@ -215,67 +223,285 @@
             { symbol: 'META', name: 'Meta' }, { symbol: 'JPM', name: 'JPMorgan' }
         ];
 
-        function showToast(msg, isError = false) {
-            let oldToast = document.querySelector('.toast');
-            if (oldToast) oldToast.remove();
-            let toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = msg;
-            toast.style.background = isError ? 'rgba(255,59,48,0.9)' : 'rgba(0,200,83,0.9)';
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        // ============ GitHub 云端存储 ============
+        function getGitHubConfig() {
+            currentRepo = document.getElementById('githubRepo')?.value.trim() || localStorage.getItem('tradewise_github_repo') || '';
+            currentToken = document.getElementById('githubToken')?.value.trim() || localStorage.getItem('tradewise_github_token') || '';
+            if (currentRepo) localStorage.setItem('tradewise_github_repo', currentRepo);
+            if (currentToken) localStorage.setItem('tradewise_github_token', currentToken);
+            return { repo: currentRepo, token: currentToken };
         }
 
-        function loadLocalData() {
-            let savedUsers = localStorage.getItem('tradewise_users');
-            if (savedUsers) users = JSON.parse(savedUsers);
-            let savedPortfolios = localStorage.getItem('tradewise_portfolios');
-            if (savedPortfolios) portfolioData = JSON.parse(savedPortfolios);
+        async function saveToGitHub(data, filename) {
+            const { repo, token } = getGitHubConfig();
+            if (!repo || !token) throw new Error('GitHub not configured');
             
-            if (!users['demo']) {
-                users['demo'] = { id: 'user_demo', username: 'demo', password: 'demo123' };
-                localStorage.setItem('tradewise_users', JSON.stringify(users));
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+            
+            // 检查文件是否存在
+            let check = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            let sha = null;
+            if (check.ok) { let exist = await check.json(); sha = exist.sha; }
+            
+            const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: `Update ${filename} - ${new Date().toLocaleString()}`,
+                    content: content,
+                    sha: sha
+                })
+            });
+            
+            if (!res.ok) throw new Error('Save failed');
+            return true;
+        }
+
+        async function loadFromGitHub(filename) {
+            const { repo, token } = getGitHubConfig();
+            if (!repo || !token) throw new Error('GitHub not configured');
+            
+            const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (!res.ok) {
+                if (res.status === 404) return null;
+                throw new Error('Load failed');
             }
-            if (!portfolioData['user_demo']) {
-                portfolioData['user_demo'] = { balance: 100000, holdings: {} };
-                localStorage.setItem('tradewise_portfolios', JSON.stringify(portfolioData));
+            
+            const data = await res.json();
+            const content = decodeURIComponent(escape(atob(data.content)));
+            return JSON.parse(content);
+        }
+
+        // 保存所有云端数据
+        async function saveAllCloudData() {
+            if (!currentUser) return;
+            
+            const allData = {
+                users: cloudUsers,
+                portfolios: cloudPortfolios,
+                lastUpdated: new Date().toISOString(),
+                version: '2.0'
+            };
+            
+            try {
+                await saveToGitHub(allData, 'tradewise_cloud_data.json');
+                document.getElementById('saveStatus').innerHTML = '✓ Saved';
+                setTimeout(() => { if(document.getElementById('saveStatus')) document.getElementById('saveStatus').innerHTML = ''; }, 2000);
+                return true;
+            } catch(e) {
+                console.error('Save error:', e);
+                document.getElementById('saveStatus').innerHTML = '⚠️ Save failed';
+                setTimeout(() => { if(document.getElementById('saveStatus')) document.getElementById('saveStatus').innerHTML = ''; }, 2000);
+                return false;
             }
         }
 
-        function saveUsers() { localStorage.setItem('tradewise_users', JSON.stringify(users)); }
-        function savePortfolios() { localStorage.setItem('tradewise_portfolios', JSON.stringify(portfolioData)); }
+        // 加载所有云端数据
+        async function loadAllCloudData() {
+            try {
+                const data = await loadFromGitHub('tradewise_cloud_data.json');
+                if (data) {
+                    cloudUsers = data.users || {};
+                    cloudPortfolios = data.portfolios || {};
+                    
+                    // 确保 demo 用户存在
+                    if (!cloudUsers['demo']) {
+                        cloudUsers['demo'] = { id: 'user_demo', username: 'demo', password: 'demo123', createdAt: new Date().toISOString() };
+                    }
+                    if (!cloudPortfolios['user_demo']) {
+                        cloudPortfolios['user_demo'] = { balance: 100000, holdings: {}, transactions: [] };
+                    }
+                    
+                    document.getElementById('cloudConnectionStatus').innerHTML = '✅ Cloud connected';
+                    document.getElementById('cloudConnectionStatus').style.color = '#00c853';
+                    return true;
+                } else {
+                    // 初始化新数据
+                    cloudUsers = {
+                        'demo': { id: 'user_demo', username: 'demo', password: 'demo123', createdAt: new Date().toISOString() }
+                    };
+                    cloudPortfolios = {
+                        'user_demo': { balance: 100000, holdings: {}, transactions: [] }
+                    };
+                    await saveAllCloudData();
+                    document.getElementById('cloudConnectionStatus').innerHTML = '✅ Cloud ready';
+                    return true;
+                }
+            } catch(e) {
+                console.error('Load error:', e);
+                document.getElementById('cloudConnectionStatus').innerHTML = '⚠️ Config GitHub first';
+                return false;
+            }
+        }
 
+        // ============ 用户认证（云端） ============
+        async function handleLogin() {
+            const username = document.getElementById('authUsername').value.trim();
+            const password = document.getElementById('authPassword').value;
+            
+            if (!username || !password) {
+                showToast('Please enter username and password', true);
+                return;
+            }
+            
+            // 先从云端加载最新数据
+            await loadAllCloudData();
+            
+            const user = cloudUsers[username];
+            if (user && user.password === password) {
+                currentUser = user;
+                localStorage.setItem('tradewise_currentUser', JSON.stringify(user));
+                
+                // 加载用户的自选股
+                const userWatchlist = localStorage.getItem(`watchlist_${user.id}`);
+                if (userWatchlist) {
+                    watchlist = JSON.parse(userWatchlist);
+                } else {
+                    watchlist = [
+                        { symbol: 'AAPL', name: 'Apple Inc.' },
+                        { symbol: 'MSFT', name: 'Microsoft' },
+                        { symbol: 'TSLA', name: 'Tesla Inc.' }
+                    ];
+                }
+                
+                showMainApp();
+                showToast(`Welcome back, ${username}!`);
+            } else {
+                showToast('Invalid username or password', true);
+            }
+        }
+
+        async function handleRegister() {
+            const username = document.getElementById('authUsername').value.trim();
+            const password = document.getElementById('authPassword').value;
+            
+            if (!username || !password) {
+                showToast('Please enter username and password', true);
+                return;
+            }
+            
+            if (username.length < 3) {
+                showToast('Username must be at least 3 characters', true);
+                return;
+            }
+            
+            // 先从云端加载最新数据
+            await loadAllCloudData();
+            
+            if (cloudUsers[username]) {
+                showToast('Username already exists!', true);
+                return;
+            }
+            
+            const newId = 'user_' + Date.now();
+            const newUser = { id: newId, username: username, password: password, createdAt: new Date().toISOString() };
+            cloudUsers[username] = newUser;
+            cloudPortfolios[newId] = { balance: 100000, holdings: {}, transactions: [] };
+            
+            // 保存到云端
+            const saved = await saveAllCloudData();
+            if (saved) {
+                currentUser = newUser;
+                localStorage.setItem('tradewise_currentUser', JSON.stringify(newUser));
+                watchlist = [
+                    { symbol: 'AAPL', name: 'Apple Inc.' },
+                    { symbol: 'MSFT', name: 'Microsoft' },
+                    { symbol: 'TSLA', name: 'Tesla Inc.' }
+                ];
+                showMainApp();
+                showToast(`Welcome ${username}! Account created.`);
+            } else {
+                showToast('Failed to create account. Check GitHub config.', true);
+            }
+        }
+
+        async function syncPortfolioToCloud() {
+            if (!currentUser) return;
+            
+            const portfolio = cloudPortfolios[currentUser.id] || { balance: 100000, holdings: {}, transactions: [] };
+            
+            // 更新持仓市值
+            for (let symbol in portfolio.holdings) {
+                const stock = watchlist.find(s => s.symbol === symbol);
+                if (stock && stock.price) {
+                    portfolio.holdings[symbol].currentPrice = stock.price;
+                }
+            }
+            cloudPortfolios[currentUser.id] = portfolio;
+            await saveAllCloudData();
+        }
+
+        function updateRankingFromCloud() {
+            const rankings = [];
+            for (let username in cloudUsers) {
+                const user = cloudUsers[username];
+                const portfolio = cloudPortfolios[user.id] || { balance: 100000, holdings: {} };
+                let totalValue = portfolio.balance;
+                
+                for (let symbol in portfolio.holdings) {
+                    const holding = portfolio.holdings[symbol];
+                    const stock = watchlist.find(s => s.symbol === symbol);
+                    const price = stock?.price || holding.avgPrice || 150;
+                    totalValue += holding.shares * price;
+                }
+                
+                rankings.push({ username: user.username, totalValue, userId: user.id });
+            }
+            
+            rankings.sort((a, b) => b.totalValue - a.totalValue);
+            
+            const container = document.getElementById('rankingList');
+            if (!container) return;
+            
+            container.innerHTML = rankings.slice(0, 10).map((r, i) => `
+                <div class="ranking-item">
+                    <div class="ranking-rank">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}`}</div>
+                    <div class="ranking-name">${r.username} ${currentUser?.username === r.username ? '(you)' : ''}</div>
+                    <div class="ranking-value">$${r.totalValue.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+                </div>
+            `).join('');
+        }
+
+        // ============ 股票功能 ============
         async function getQuote(symbol) {
             try {
-                let res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
-                let data = await res.json();
+                const res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
+                const data = await res.json();
                 if (data && data.c) return { price: data.c, changePercent: data.dp };
             } catch(e) {}
-            let prices = { 'AAPL': 175, 'MSFT': 420, 'TSLA': 240, 'GOOGL': 138, 'AMZN': 145, 'NVDA': 900 };
-            let base = prices[symbol] || 150;
+            const prices = { 'AAPL': 175, 'MSFT': 420, 'TSLA': 240, 'GOOGL': 138, 'AMZN': 145, 'NVDA': 900 };
+            const base = prices[symbol] || 150;
             return { price: base * (1 + (Math.random() - 0.5) * 0.02), changePercent: (Math.random() - 0.5) * 2 };
         }
 
         async function refreshPrices() {
             for (let stock of watchlist) {
-                let quote = await getQuote(stock.symbol);
+                const quote = await getQuote(stock.symbol);
                 stock.price = quote.price;
                 stock.changePercent = quote.changePercent;
             }
             if (selectedStock) {
-                let quote = await getQuote(selectedStock.symbol);
+                const quote = await getQuote(selectedStock.symbol);
                 selectedStock.price = quote.price;
                 selectedStock.changePercent = quote.changePercent;
                 document.getElementById('currentPrice').textContent = `$${selectedStock.price.toFixed(2)}`;
-                let change = document.getElementById('currentChange');
+                const change = document.getElementById('currentChange');
                 change.textContent = `${selectedStock.changePercent >= 0 ? '+' : ''}${selectedStock.changePercent.toFixed(2)}%`;
                 change.className = `selected-change ${selectedStock.changePercent >= 0 ? 'positive' : 'negative'}`;
             }
             renderWatchlist();
-            updatePortfolio();
-            updateRanking();
+            updatePortfolioDisplay();
+            updateRankingFromCloud();
             if (selectedStock) document.getElementById('marketPrice').value = `$${selectedStock.price.toFixed(2)}`;
             updatePreview();
+            
+            // 同步到云端
+            await syncPortfolioToCloud();
         }
 
         function generateCandles(days = 30) {
@@ -331,7 +557,7 @@
         window.removeStock = (symbol, event) => {
             event.stopPropagation();
             watchlist = watchlist.filter(s => s.symbol !== symbol);
-            localStorage.setItem('tradewise_watchlist', JSON.stringify(watchlist));
+            localStorage.setItem(`watchlist_${currentUser.id}`, JSON.stringify(watchlist));
             if (selectedStock?.symbol === symbol && watchlist.length) selectStock(watchlist[0].symbol);
             renderWatchlist();
         };
@@ -340,7 +566,7 @@
             if (!selectedStock) return;
             if (!watchlist.find(s => s.symbol === selectedStock.symbol)) {
                 watchlist.push({ symbol: selectedStock.symbol, name: selectedStock.name });
-                localStorage.setItem('tradewise_watchlist', JSON.stringify(watchlist));
+                localStorage.setItem(`watchlist_${currentUser.id}`, JSON.stringify(watchlist));
                 renderWatchlist();
                 showToast(`Added ${selectedStock.symbol}`);
             }
@@ -358,7 +584,7 @@
         window.addStock = async (symbol, name) => {
             if (!watchlist.find(s => s.symbol === symbol)) {
                 watchlist.push({ symbol, name });
-                localStorage.setItem('tradewise_watchlist', JSON.stringify(watchlist));
+                localStorage.setItem(`watchlist_${currentUser.id}`, JSON.stringify(watchlist));
                 renderWatchlist();
             }
             let quote = await getQuote(symbol);
@@ -371,19 +597,22 @@
             document.getElementById('searchResults').classList.remove('show');
         };
 
-        function updatePortfolio() {
+        function updatePortfolioDisplay() {
             if (!currentUser) return;
-            let portfolio = portfolioData[currentUser.id] || { balance: 100000, holdings: {} };
+            const portfolio = cloudPortfolios[currentUser.id] || { balance: 100000, holdings: {} };
             document.getElementById('balance').textContent = `$${portfolio.balance.toFixed(2)}`;
+            
             let container = document.getElementById('portfolioContainer');
             let holdings = Object.entries(portfolio.holdings || {});
             if (!holdings.length) { container.innerHTML = '<div style="text-align:center;padding:20px;">No positions</div>'; return; }
+            
             container.innerHTML = holdings.map(([symbol, h]) => {
                 let stock = watchlist.find(s => s.symbol === symbol);
-                let current = stock?.price || h.avgPrice;
-                let pnl = (current - h.avgPrice) * h.shares;
-                return `<div class="portfolio-item"><div class="portfolio-header"><span>${symbol}</span><span class="${pnl >= 0 ? 'positive' : 'negative'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</span></div>
-                        <div class="portfolio-details"><span>${h.shares} shares</span><span>Avg: $${h.avgPrice.toFixed(2)}</span></div></div>`;
+                let currentPrice = stock?.price || h.avgPrice;
+                let pnl = (currentPrice - h.avgPrice) * h.shares;
+                let pnlPercent = ((currentPrice - h.avgPrice) / h.avgPrice * 100) || 0;
+                return `<div class="portfolio-item"><div class="portfolio-header"><span>${symbol}</span><span class="${pnl >= 0 ? 'positive' : 'negative'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${pnlPercent.toFixed(2)}%)</span></div>
+                        <div class="portfolio-details"><span>${h.shares} shares @ $${h.avgPrice.toFixed(2)}</span><span>Now: $${currentPrice.toFixed(2)}</span></div></div>`;
             }).join('');
         }
 
@@ -395,124 +624,79 @@
         async function executeTrade() {
             if (!currentUser || !selectedStock) return;
             let shares = parseInt(document.getElementById('tradeShares').value);
-            if (shares <= 0) return;
+            if (shares <= 0) { showToast('Invalid quantity', true); return; }
+            
             let price = selectedStock.price;
             let total = shares * price;
-            let portfolio = portfolioData[currentUser.id] || { balance: 100000, holdings: {} };
+            let portfolio = cloudPortfolios[currentUser.id] || { balance: 100000, holdings: {}, transactions: [] };
             
             if (currentOrderType === 'buy') {
                 if (portfolio.balance < total) { showToast('Insufficient balance', true); return; }
                 portfolio.balance -= total;
-                if (!portfolio.holdings[selectedStock.symbol]) portfolio.holdings[selectedStock.symbol] = { symbol: selectedStock.symbol, shares: 0, avgPrice: 0 };
+                if (!portfolio.holdings[selectedStock.symbol]) {
+                    portfolio.holdings[selectedStock.symbol] = { symbol: selectedStock.symbol, shares: 0, avgPrice: 0 };
+                }
                 let h = portfolio.holdings[selectedStock.symbol];
                 h.avgPrice = (h.avgPrice * h.shares + total) / (h.shares + shares);
                 h.shares += shares;
-                showToast(`Bought ${shares} shares`);
+                showToast(`✓ Bought ${shares} ${selectedStock.symbol}`);
             } else {
                 let h = portfolio.holdings[selectedStock.symbol];
                 if (!h || h.shares < shares) { showToast('Insufficient shares', true); return; }
                 portfolio.balance += total;
                 h.shares -= shares;
                 if (h.shares === 0) delete portfolio.holdings[selectedStock.symbol];
-                showToast(`Sold ${shares} shares`);
-            }
-            portfolioData[currentUser.id] = portfolio;
-            savePortfolios();
-            updatePortfolio();
-            updateRanking();
-        }
-
-        function calculateTotalValue(userId) {
-            let portfolio = portfolioData[userId] || { balance: 100000, holdings: {} };
-            let total = portfolio.balance;
-            for (let [symbol, h] of Object.entries(portfolio.holdings || {})) {
-                let stock = watchlist.find(s => s.symbol === symbol);
-                let price = stock?.price || 150;
-                total += h.shares * price;
-            }
-            return total;
-        }
-
-        function updateRanking() {
-            let rankings = [];
-            for (let username in users) {
-                let user = users[username];
-                let total = calculateTotalValue(user.id);
-                rankings.push({ username: user.username, total, userId: user.id });
-            }
-            rankings.sort((a, b) => b.total - a.total);
-            let container = document.getElementById('rankingList');
-            if (!rankings.length) { container.innerHTML = '<div>No users</div>'; return; }
-            container.innerHTML = rankings.slice(0, 10).map((r, i) => `
-                <div class="ranking-item">
-                    <div class="ranking-rank">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}`}</div>
-                    <div class="ranking-name">${r.username} ${currentUser?.username === r.username ? '(you)' : ''}</div>
-                    <div class="ranking-value">$${r.total.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
-                </div>
-            `).join('');
-        }
-
-        // ============ 用户认证（修复版）============
-        function handleLogin() {
-            let username = document.getElementById('authUsername').value.trim();
-            let password = document.getElementById('authPassword').value;
-            
-            if (!username || !password) {
-                showToast('Please enter username and password', true);
-                return;
+                showToast(`✓ Sold ${shares} ${selectedStock.symbol}`);
             }
             
-            let user = users[username];
-            if (user && user.password === password) {
-                currentUser = user;
-                localStorage.setItem('tradewise_currentUser', JSON.stringify(user));
-                showMainApp();
+            // 记录交易
+            if (!portfolio.transactions) portfolio.transactions = [];
+            portfolio.transactions.push({
+                type: currentOrderType,
+                symbol: selectedStock.symbol,
+                shares: shares,
+                price: price,
+                total: total,
+                time: new Date().toISOString()
+            });
+            
+            cloudPortfolios[currentUser.id] = portfolio;
+            
+            // 保存到云端
+            const saved = await saveAllCloudData();
+            if (saved) {
+                updatePortfolioDisplay();
+                updateRankingFromCloud();
             } else {
-                showToast('Invalid username or password', true);
+                showToast('Trade executed but cloud sync failed', true);
             }
         }
 
-        function handleRegister() {
-            let username = document.getElementById('authUsername').value.trim();
-            let password = document.getElementById('authPassword').value;
-            
-            if (!username || !password) {
-                showToast('Please enter username and password', true);
-                return;
-            }
-            
-            if (username.length < 3) {
-                showToast('Username must be at least 3 characters', true);
-                return;
-            }
-            
-            if (users[username]) {
-                showToast('Username already exists!', true);
-                return;
-            }
-            
-            let newId = 'user_' + Date.now();
-            let newUser = { id: newId, username: username, password: password };
-            users[username] = newUser;
-            portfolioData[newId] = { balance: 100000, holdings: {} };
-            
-            saveUsers();
-            savePortfolios();
-            
-            currentUser = newUser;
-            localStorage.setItem('tradewise_currentUser', JSON.stringify(newUser));
-            
-            showToast(`Welcome ${username}! Account created.`);
-            showMainApp();
+        async function askAI() {
+            let question = document.getElementById('aiQuickQuestion').value;
+            if (!question || !selectedStock) return;
+            let div = document.getElementById('aiQuickAnswer');
+            div.innerHTML = '🤔 Thinking...';
+            try {
+                let res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
+                    body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'user', content: `Stock: ${selectedStock.symbol} at $${selectedStock.price}. Question: ${question}` }], max_tokens: 200 })
+                });
+                let data = await res.json();
+                div.innerHTML = data.choices[0].message.content;
+            } catch(e) { div.innerHTML = '⚠️ AI unavailable'; }
         }
 
-        function handleAuth() {
-            let isLoginMode = document.getElementById('authTitle').textContent === 'Login to TradeWise Pro';
-            if (isLoginMode) {
-                handleLogin();
-            } else {
-                handleRegister();
-            }
+        function showToast(msg, isError = false) {
+            let oldToast = document.querySelector('.toast');
+            if (oldToast) oldToast.remove();
+            let toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            toast.style.background = isError ? 'rgba(255,59,48,0.9)' : 'rgba(0,200,83,0.9)';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
 
         function toggleAuthMode() {
@@ -529,8 +713,6 @@
                 btn.textContent = 'Login';
                 switchText.innerHTML = '📝 Create new account';
             }
-            
-            // 清空输入框
             document.getElementById('authUsername').value = '';
             document.getElementById('authPassword').value = '';
         }
@@ -541,20 +723,18 @@
             if (refreshInterval) clearInterval(refreshInterval);
             document.getElementById('mainApp').classList.add('hidden');
             document.getElementById('authModal').classList.remove('hidden');
-            // 重置为登录模式
             document.getElementById('authTitle').textContent = 'Login to TradeWise Pro';
             document.getElementById('authSubmitBtn').textContent = 'Login';
             document.getElementById('authSwitch').innerHTML = '📝 Create new account';
         }
 
         async function showMainApp() {
-            // 隐藏登录框，显示主界面
             document.getElementById('authModal').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             document.getElementById('userNameDisplay').textContent = currentUser.username;
             
-            // 加载自选股
-            let savedWatchlist = localStorage.getItem('tradewise_watchlist');
+            // 加载用户的自选股
+            let savedWatchlist = localStorage.getItem(`watchlist_${currentUser.id}`);
             if (savedWatchlist) {
                 watchlist = JSON.parse(savedWatchlist);
             } else {
@@ -567,112 +747,49 @@
             
             await refreshPrices();
             if (watchlist.length) await selectStock(watchlist[0].symbol);
-            updatePortfolio();
-            updateRanking();
+            updatePortfolioDisplay();
+            updateRankingFromCloud();
             
             if (refreshInterval) clearInterval(refreshInterval);
-            refreshInterval = setInterval(() => { refreshPrices(); updateRanking(); }, 30000);
-        }
-
-        // GitHub 同步
-        async function syncToGitHub() {
-            let repo = document.getElementById('githubRepo').value.trim();
-            let token = document.getElementById('githubToken').value.trim();
-            if (!repo || !token) { showToast('Enter repo and token', true); return; }
-            
-            let allData = { users, portfolios: portfolioData, watchlist, timestamp: new Date().toISOString() };
-            let content = btoa(unescape(encodeURIComponent(JSON.stringify(allData, null, 2))));
-            let filename = `tradewise_backup_${currentUser.username}.json`;
-            
-            try {
-                let check = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                let sha = null;
-                if (check.ok) { let exist = await check.json(); sha = exist.sha; }
-                
-                let res = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: `TradeWise backup ${new Date().toLocaleString()}`, content, sha })
-                });
-                if (res.ok) showToast('Synced to GitHub!');
-                else showToast('Sync failed', true);
-            } catch(e) { showToast('Error syncing', true); }
-        }
-
-        async function loadFromGitHub() {
-            let repo = document.getElementById('githubRepo').value.trim();
-            let token = document.getElementById('githubToken').value.trim();
-            if (!repo || !token) { showToast('Enter repo and token', true); return; }
-            
-            let filename = `tradewise_backup_${currentUser.username}.json`;
-            try {
-                let res = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (res.ok) {
-                    let data = await res.json();
-                    let saved = JSON.parse(decodeURIComponent(escape(atob(data.content))));
-                    if (saved.users) users = saved.users;
-                    if (saved.portfolios) portfolioData = saved.portfolios;
-                    if (saved.watchlist) watchlist = saved.watchlist;
-                    saveUsers();
-                    savePortfolios();
-                    localStorage.setItem('tradewise_watchlist', JSON.stringify(watchlist));
-                    await refreshPrices();
-                    renderWatchlist();
-                    updatePortfolio();
-                    updateRanking();
-                    showToast('Loaded from GitHub!');
-                } else showToast('No backup found', true);
-            } catch(e) { showToast('Error loading', true); }
-        }
-
-        async function askAI() {
-            let question = document.getElementById('aiQuickQuestion').value;
-            if (!question || !selectedStock) return;
-            let div = document.getElementById('aiQuickAnswer');
-            div.innerHTML = '🤔 Thinking...';
-            try {
-                let res = await fetch('https://api.deepseek.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
-                    body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'user', content: `Stock: ${selectedStock.symbol} at $${selectedStock.price}. Question: ${question}` }], max_tokens: 200 })
-                });
-                let data = await res.json();
-                div.innerHTML = data.choices[0].message.content;
-            } catch(e) { div.innerHTML = 'AI unavailable'; }
+            refreshInterval = setInterval(async () => { 
+                await refreshPrices(); 
+                updateRankingFromCloud();
+            }, 30000);
         }
 
         // ============ 初始化 ============
-        loadLocalData();
-        
-        // 检查是否已登录
-        let savedUser = localStorage.getItem('tradewise_currentUser');
-        if (savedUser) {
-            currentUser = JSON.parse(savedUser);
-            if (currentUser && users[currentUser.username]) {
+        async function init() {
+            // 加载保存的 GitHub 配置
+            const savedRepo = localStorage.getItem('tradewise_github_repo');
+            const savedToken = localStorage.getItem('tradewise_github_token');
+            if (savedRepo) document.getElementById('githubRepo').value = savedRepo;
+            if (savedToken) document.getElementById('githubToken').value = savedToken;
+            
+            // 尝试加载云端数据
+            await loadAllCloudData();
+            
+            // 检查是否有已登录用户
+            const savedUser = localStorage.getItem('tradewise_currentUser');
+            if (savedUser && cloudUsers[JSON.parse(savedUser).username]) {
+                currentUser = JSON.parse(savedUser);
                 showMainApp();
             } else {
                 document.getElementById('authModal').classList.remove('hidden');
                 document.getElementById('mainApp').classList.add('hidden');
             }
-        } else {
-            document.getElementById('authModal').classList.remove('hidden');
-            document.getElementById('mainApp').classList.add('hidden');
         }
 
         // 事件绑定
-        document.getElementById('authSubmitBtn').addEventListener('click', handleAuth);
+        document.getElementById('authSubmitBtn').addEventListener('click', () => {
+            const isLogin = document.getElementById('authTitle').textContent === 'Login to TradeWise Pro';
+            if (isLogin) handleLogin(); else handleRegister();
+        });
         document.getElementById('authSwitch').addEventListener('click', toggleAuthMode);
         document.getElementById('logoutBtn').addEventListener('click', logout);
         document.getElementById('refreshBtn').addEventListener('click', () => { refreshPrices(); if(selectedStock) renderKline(); });
         document.getElementById('tradeShares').addEventListener('input', updatePreview);
         document.getElementById('executeTradeBtn').addEventListener('click', executeTrade);
         document.getElementById('addCurrentToWatchlistBtn').addEventListener('click', addToWatchlist);
-        document.getElementById('syncDataBtn').addEventListener('click', syncToGitHub);
-        document.getElementById('loadDataBtn').addEventListener('click', loadFromGitHub);
         document.getElementById('searchInput').addEventListener('input', (e) => searchStocks(e.target.value));
         
         document.getElementById('buyTab').addEventListener('click', () => {
@@ -709,9 +826,20 @@
             if (!e.target.closest('.search-container')) document.getElementById('searchResults').classList.remove('show');
         });
         
-        // 按 Enter 键也可以提交
-        document.getElementById('authUsername').addEventListener('keypress', (e) => { if(e.key === 'Enter') handleAuth(); });
-        document.getElementById('authPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') handleAuth(); });
+        document.getElementById('authUsername').addEventListener('keypress', (e) => { if(e.key === 'Enter') { if(document.getElementById('authTitle').textContent === 'Login to TradeWise Pro') handleLogin(); else handleRegister(); } });
+        document.getElementById('authPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') { if(document.getElementById('authTitle').textContent === 'Login to TradeWise Pro') handleLogin(); else handleRegister(); } });
+        
+        // GitHub 配置变化时保存
+        document.getElementById('githubRepo').addEventListener('change', () => {
+            const repo = document.getElementById('githubRepo').value;
+            if (repo) localStorage.setItem('tradewise_github_repo', repo);
+        });
+        document.getElementById('githubToken').addEventListener('change', () => {
+            const token = document.getElementById('githubToken').value;
+            if (token) localStorage.setItem('tradewise_github_token', token);
+        });
+        
+        init();
     </script>
 </body>
 </html>
