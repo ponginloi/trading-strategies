@@ -1,0 +1,226 @@
+Here's a professional README.md file for your TradeWise Pro repository:
+
+```markdown
+# TradeWise Pro
+
+### AI-Powered Trading Simulator | Multi-Market Support | Real-Time Data
+
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-web-brightgreen.svg)](https://github.com)
+[![API](https://img.shields.io/badge/API-Finnhub-orange.svg)](https://finnhub.io)
+
+---
+
+## 📖 Overview
+
+**TradeWise Pro** is a professional-grade stock trading simulator that allows users to practice trading with real-time market data. The platform supports multiple markets including US stocks, Hong Kong stocks, and A-shares, with integrated AI analysis powered by DeepSeek.
+
+### ✨ Key Features
+
+- 📊 **Real-time Stock Quotes** - Live data via Finnhub API
+- 🔍 **Stock Search** - Search by symbol or company name
+- 📈 **Watchlist Management** - Add/remove stocks to your personal watchlist
+- 💰 **Paper Trading** - Practice trading with $100,000 virtual capital
+- 📊 **Portfolio Tracking** - Real-time P&L calculation
+- 🤖 **AI Trading Assistant** - Powered by DeepSeek AI for market analysis
+- ☁️ **GitHub Sync** - Save your trading strategies to GitHub
+- 📱 **Responsive Design** - Works on desktop and tablet devices
+
+---
+
+## ⚠️ Known Issues
+
+### Candlestick Chart (K-Line) - Under Development
+
+> **Status:** 🚧 Work in Progress
+
+The candlestick chart feature is currently experiencing data fetching issues. When the Finnhub API fails to return data (due to rate limits or network issues), the chart falls back to simulated data.
+
+**What works:**
+- ✅ Chart rendering with ECharts
+- ✅ Timeframe switching (1D, 1W, 1M, 3M, 1Y)
+- ✅ Tooltip with OHLC data
+
+**What needs improvement:**
+- ❌ Consistent real-time K-line data from API
+- ❌ Historical data accuracy
+- ❌ Smooth real-time updates
+
+**Roadmap:**
+- [ ] Implement WebSocket for real-time candle updates
+- [ ] Add more data sources as fallback (Alpha Vantage, Yahoo Finance)
+- [ ] Cache historical data to reduce API calls
+- [ ] Add technical indicators (MA, RSI, MACD)
+
+---
+
+## 🚀 Live Demo
+
+Access the live application at:
+```
+https://[your-username].github.io/tradewise-pro/
+```
+
+---
+
+## 📦 Tech Stack
+
+| Category | Technologies |
+|----------|-------------|
+| Frontend | HTML5, CSS3, JavaScript (ES6+) |
+| Charts | ECharts |
+| APIs | Finnhub, DeepSeek AI |
+| Storage | LocalStorage, GitHub API |
+| Styling | Glassmorphism (iOS 26 style) |
+
+---
+
+## 🔧 Installation
+
+### Local Development
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/your-username/tradewise-pro.git
+cd tradewise-pro
+```
+
+2. **Open the application**
+```bash
+# Simply open index.html in your browser
+open index.html
+```
+
+3. **Login with demo account**
+```
+Username: demo
+Password: demo123
+```
+
+### API Key Configuration
+
+The application uses the following APIs (keys are already embedded for demo purposes):
+
+| API | Purpose | Free Tier Limit |
+|-----|---------|-----------------|
+| Finnhub | Stock quotes & candles | 60 requests/min |
+| DeepSeek | AI analysis | 200k tokens/month |
+
+---
+
+## 📁 Project Structure
+
+```
+tradewise-pro/
+├── index.html          # Main application file
+├── README.md           # Project documentation
+└── assets/
+    └── (no external dependencies - all CDN based)
+```
+
+---
+
+## 🎮 How to Use
+
+### 1. Getting Started
+- Log in with `demo` / `demo123`
+- Initial balance: **$100,000**
+
+### 2. Search for Stocks
+- Use the search bar at the top
+- Supports symbols: AAPL, MSFT, TSLA, 0700.HK, etc.
+
+### 3. Trading
+- Select a stock from your watchlist
+- Choose **Buy** or **Sell**
+- Enter quantity and execute trade
+
+### 4. AI Analysis
+- Click on any stock
+- Ask questions in the AI panel
+- Get instant market insights
+
+### 5. GitHub Sync
+- Enter your GitHub repository (e.g., `username/repo`)
+- Enter your Personal Access Token
+- Save your trading strategies
+
+---
+
+## 🔐 Default Accounts
+
+| Username | Password | Balance |
+|----------|----------|---------|
+| demo | demo123 | $100,000 |
+
+*Create additional accounts via the registration form*
+
+---
+
+## 🛠️ Development Roadmap
+
+### Completed ✅
+- [x] User authentication system
+- [x] Stock search functionality
+- [x] Watchlist management
+- [x] Paper trading engine
+- [x] Portfolio tracking with P&L
+- [x] DeepSeek AI integration
+- [x] GitHub strategy sync
+
+### In Progress 🚧
+- [ ] Real-time K-line chart (candlestick)
+- [ ] WebSocket for live price updates
+- [ ] Order types (limit, stop-loss)
+
+### Planned 📋
+- [ ] Mobile app version
+- [ ] Multi-language support (EN/ZH already implemented)
+- [ ] Social trading features
+- [ ] Technical indicators
+- [ ] Backtesting engine
+
+---
+
+## 📊 API Rate Limits
+
+| API | Limit | Reset |
+|-----|-------|-------|
+| Finnhub | 60 requests/min | Every minute |
+| DeepSeek | 200k tokens/month | Monthly |
+
+When rate limits are exceeded, the app falls back to simulated data.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📝 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+## 🙏 Acknowledgements
+
+- [Finnhub](https://finnhub.io/) - Free stock API
+- [DeepSeek](https://deepseek.com/) - AI assistant API
+- [ECharts](https://echarts.apache.org/) - Charting library
+- [GitHub](https://github.com/) - Hosting & sync
+
+---
+
+## 📧 Contact
+
+Project Link: [https://github.com/your-username/tradewise-pro](https://github.com/your-username/tradewise-pro)
+
