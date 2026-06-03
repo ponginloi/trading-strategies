@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>TradeWise Pro | Real Stock Trading Platform</title>
+    <title>TradeWise Pro | Cloud Trading Platform</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -17,14 +17,13 @@
         .search-input-wrapper:focus-within { border-color: #4f46e5; }
         .search-input { flex: 1; background: transparent; border: none; color: white; font-size: 0.85rem; padding: 8px 0; outline: none; }
         .search-input::placeholder { color: rgba(255,255,255,0.4); }
-        .search-clear { background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; font-size: 1rem; }
+        .search-clear { background: none; border: none; color: rgba(255,255,255,0.4); cursor: pointer; }
         .search-results { position: absolute; top: 100%; left: 0; right: 0; background: rgba(20,24,49,0.98); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-top: 8px; max-height: 300px; overflow-y: auto; z-index: 1000; display: none; }
         .search-results.show { display: block; }
         .search-result-item { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .search-result-item:hover { background: rgba(79,70,229,0.3); }
         .result-symbol { font-weight: 600; }
         .result-name { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
-        .result-market { font-size: 0.7rem; padding: 2px 8px; border-radius: 12px; background: rgba(255,255,255,0.1); }
         .user-controls { display: flex; align-items: center; gap: 16px; }
         .user-name { background: rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; }
         .btn-icon { background: rgba(255,255,255,0.1); border: none; padding: 8px 16px; border-radius: 12px; color: white; cursor: pointer; }
@@ -85,15 +84,21 @@
         .ai-quick-panel { margin-top: 16px; padding: 12px; background: rgba(79,70,229,0.1); border-radius: 12px; }
         .ai-question-input { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 8px 12px; color: white; font-size: 0.8rem; margin-bottom: 8px; }
         .ai-answer { font-size: 0.75rem; color: rgba(255,255,255,0.7); margin-top: 8px; max-height: 100px; overflow-y: auto; }
+        .ranking-container { margin-top: 20px; padding: 12px; background: rgba(79,70,229,0.1); border-radius: 12px; }
+        .ranking-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .ranking-rank { font-weight: 700; width: 40px; }
+        .ranking-name { flex: 1; }
+        .ranking-value { font-weight: 700; color: #00c853; }
+        .ranking-top1 { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,165,0,0.1)); border-radius: 8px; padding: 8px; margin-bottom: 4px; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000; justify-content: center; align-items: center; }
         .modal.active { display: flex; }
         .modal-content { background: rgba(20,24,49,0.95); border-radius: 24px; padding: 32px; width: 90%; max-width: 400px; border: 1px solid rgba(255,255,255,0.2); }
         .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); padding: 12px 24px; border-radius: 40px; z-index: 2000; animation: fadeInUp 0.3s ease; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        .cloud-sync { font-size: 0.7rem; margin-left: 8px; color: #4f46e5; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
-        .loading-spinner { display: flex; justify-content: center; align-items: center; height: 100%; color: #4f46e5; }
     </style>
 </head>
 <body>
@@ -112,11 +117,11 @@
 
     <div class="trading-container" id="mainApp" style="display: none;">
         <div class="top-nav">
-            <div class="logo-area"><span class="logo">TradeWise Pro</span><span class="market-status" id="apiStatus">● Connecting...</span></div>
+            <div class="logo-area"><span class="logo">TradeWise Pro</span><span class="market-status" id="apiStatus">● Cloud Sync</span></div>
             <div class="search-container">
                 <div class="search-input-wrapper">
                     <span class="search-icon">🔍</span>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search stocks... AAPL, MSFT, TSLA, 0700.HK">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search stocks... AAPL, MSFT, TSLA">
                     <button class="search-clear" id="clearSearchBtn" style="display: none;">✕</button>
                 </div>
                 <div class="search-results" id="searchResults"></div>
@@ -157,12 +162,21 @@
                     <button class="order-type-btn buy active" id="buyTab">Buy</button>
                     <button class="order-type-btn sell" id="sellTab">Sell</button>
                 </div>
-                <div class="balance-card"><div class="balance-label">Available Balance</div><div class="balance-value" id="balance">$100,000.00</div></div>
+                <div class="balance-card">
+                    <div class="balance-label">Available Balance</div>
+                    <div class="balance-value" id="balance">$100,000.00</div>
+                </div>
                 <div class="input-group"><label class="input-label">Quantity (Shares)</label><input type="number" id="tradeShares" class="input-field" value="1" min="1" step="1"></div>
                 <div class="input-group"><label class="input-label">Market Price</label><input type="text" id="marketPrice" class="input-field" readonly></div>
                 <div class="trade-preview"><div class="preview-row"><span>Estimated Total</span><span id="estimatedTotal">$0.00</span></div></div>
                 <button class="submit-btn buy" id="executeTradeBtn">Buy Shares</button>
-
+                
+                <!-- 排行榜 -->
+                <div class="ranking-container">
+                    <div style="font-size: 0.8rem; margin-bottom: 8px;">🏆 Global Ranking</div>
+                    <div id="rankingList"></div>
+                </div>
+                
                 <div class="ai-quick-panel">
                     <div style="font-size: 0.7rem; margin-bottom: 8px;">🤖 DeepSeek AI Assistant</div>
                     <input type="text" id="aiQuickQuestion" class="ai-question-input" placeholder="Ask about this stock...">
@@ -170,11 +184,14 @@
                 </div>
 
                 <div class="github-section">
-                    <div style="font-size: 0.8rem; margin-bottom: 12px;">📦 GitHub Sync <span id="githubStatus" style="font-size:0.7rem; color:#4f46e5;"></span></div>
+                    <div style="font-size: 0.8rem; margin-bottom: 12px;">
+                        ☁️ GitHub Cloud Sync 
+                        <span id="cloudStatus" class="cloud-sync">● Online</span>
+                    </div>
                     <input type="text" id="githubRepo" class="input-field" placeholder="username/repo" style="margin-bottom: 8px;">
                     <input type="password" id="githubToken" class="input-field" placeholder="GitHub Token" value="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" style="margin-bottom: 8px;">
-                    <textarea id="strategyContent" class="input-field" rows="3" placeholder="Your trading strategy..."></textarea>
-                    <button id="syncGithubBtn" class="submit-btn" style="background: #24292e; margin-top: 8px;">☁️ Sync to GitHub</button>
+                    <button id="syncDataBtn" class="submit-btn" style="background: #4f46e5; margin-top: 8px;">💾 Sync Data to Cloud</button>
+                    <button id="loadDataBtn" class="submit-btn" style="background: #24292e; margin-top: 8px;">📥 Load from Cloud</button>
                 </div>
 
                 <div class="portfolio-section"><div class="panel-header" style="padding-left: 0;">💼 Positions</div><div id="portfolioContainer"></div></div>
@@ -185,134 +202,225 @@
     <script>
         const FINNHUB_API_KEY = 'd8g3tj9r01qlgcuh34c0d8g3tj9r01qlgcuh34cg';
         const DEEPSEEK_API_KEY = "sk-1f33b84b5ed746d09628b7834fc32170";
+        
+        let currentUser = null;
+        let users = {};
+        let portfolioData = {};
+        let watchlist = [];
+        let selectedStock = null;
+        let currentOrderType = 'buy';
+        let klineChart = null;
+        let refreshInterval = null;
+        let currentTimeframe = '1M';
+        let stocksData = {};
 
-        let currentUser = null, users = JSON.parse(localStorage.getItem('trading_users') || '{}');
-        let portfolioData = JSON.parse(localStorage.getItem('trading_portfolios') || '{}');
-        let watchlist = JSON.parse(localStorage.getItem('user_watchlist') || '[]');
-        let selectedStock = null, currentOrderType = 'buy', klineChart = null, refreshInterval = null, currentTimeframe = '1M';
-        let cachedCandles = {};
-
-        // 真实股票价格数据（备用）
+        // 价格数据库
         const realPriceData = {
             'AAPL': 175.34, 'MSFT': 420.72, 'GOOGL': 138.45, 'AMZN': 145.89, 'TSLA': 240.12, 'NVDA': 950.67,
-            'META': 485.23, 'JPM': 192.45, 'NFLX': 620.34, 'ADBE': 560.78, 'AMD': 165.34, 'INTC': 42.56,
-            'KO': 62.34, 'DIS': 110.23, 'PYPL': 68.45, 'CRM': 275.34, '0700.HK': 380.50, '9988.HK': 75.80
+            'META': 485.23, 'JPM': 192.45, 'NFLX': 620.34, 'ADBE': 560.78, 'AMD': 165.34, 'INTC': 42.56
         };
 
         const stockDatabase = [
             { symbol: 'AAPL', name: 'Apple Inc.', market: 'US' }, { symbol: 'MSFT', name: 'Microsoft', market: 'US' },
             { symbol: 'GOOGL', name: 'Google', market: 'US' }, { symbol: 'AMZN', name: 'Amazon', market: 'US' },
             { symbol: 'TSLA', name: 'Tesla', market: 'US' }, { symbol: 'NVDA', name: 'NVIDIA', market: 'US' },
-            { symbol: 'META', name: 'Meta', market: 'US' }, { symbol: 'JPM', name: 'JPMorgan', market: 'US' },
-            { symbol: 'NFLX', name: 'Netflix', market: 'US' }, { symbol: 'ADBE', name: 'Adobe', market: 'US' },
-            { symbol: 'AMD', name: 'AMD', market: 'US' }, { symbol: 'INTC', name: 'Intel', market: 'US' },
-            { symbol: 'KO', name: 'Coca-Cola', market: 'US' }, { symbol: 'DIS', name: 'Disney', market: 'US' },
-            { symbol: '0700.HK', name: 'Tencent', market: 'HK' }, { symbol: '9988.HK', name: 'Alibaba', market: 'HK' }
+            { symbol: 'META', name: 'Meta', market: 'US' }, { symbol: 'JPM', name: 'JPMorgan', market: 'US' }
         ];
 
-        if (watchlist.length === 0) {
-            watchlist = [{ symbol: 'AAPL', name: 'Apple Inc.' }, { symbol: 'MSFT', name: 'Microsoft' }, { symbol: 'TSLA', name: 'Tesla' }];
-            localStorage.setItem('user_watchlist', JSON.stringify(watchlist));
-        }
-
-        // 生成高质量的模拟K线数据（当API失败时使用）
-        function generateMockCandles(symbol, timeframe, days = 30) {
-            const candles = [];
-            const basePrice = realPriceData[symbol] || 150;
-            let currentPrice = basePrice;
-            let trend = (Math.random() - 0.5) * 0.02; // 随机趋势
-
-            for (let i = 0; i < days; i++) {
-                const volatility = 0.015;
-                const change = (Math.random() - 0.5 + trend) * volatility * currentPrice;
-                const open = currentPrice;
-                const close = currentPrice + change;
-                const high = Math.max(open, close) * (1 + Math.random() * 0.008);
-                const low = Math.min(open, close) * (1 - Math.random() * 0.008);
-
-                candles.push({
-                    time: i,
-                    open: open,
-                    high: high,
-                    low: low,
-                    close: close,
-                    volume: Math.floor(Math.random() * 20000000) + 5000000
-                });
-                currentPrice = close;
+        // ============ GitHub 数据存储 ============
+        async function saveAllDataToGitHub() {
+            const repo = document.getElementById('githubRepo').value.trim();
+            const token = document.getElementById('githubToken').value.trim();
+            const status = document.getElementById('cloudStatus');
+            
+            if (!repo || !token) {
+                status.innerHTML = '⚠️ Set repo & token';
+                setTimeout(() => status.innerHTML = '● Online', 3000);
+                return;
             }
-            return candles;
-        }
-
-        // 获取真实K线（带缓存和fallback）
-        async function getRealCandles(symbol, timeframe) {
-            const cacheKey = `${symbol}_${timeframe}`;
-            if (cachedCandles[cacheKey]) return cachedCandles[cacheKey];
-
+            
+            const allData = {
+                users: users,
+                portfolios: portfolioData,
+                watchlists: { [currentUser?.id]: watchlist },
+                lastUpdated: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const content = JSON.stringify(allData, null, 2);
+            const encoded = btoa(unescape(encodeURIComponent(content)));
+            const filename = `tradewise_data_${currentUser?.username}.json`;
+            
+            status.innerHTML = '⏳ Syncing...';
+            
             try {
-                let cleanSymbol = symbol.replace('.HK', '').replace('.SS', '');
-                const now = Math.floor(Date.now() / 1000);
-                let from, resolution, days;
-                switch(timeframe) {
-                    case '1D': resolution = '5'; from = now - 24*3600; days = 24; break;
-                    case '1W': resolution = '30'; from = now - 7*24*3600; days = 30; break;
-                    case '1M': resolution = 'D'; from = now - 30*24*3600; days = 30; break;
-                    case '3M': resolution = 'D'; from = now - 90*24*3600; days = 90; break;
-                    case '1Y': resolution = 'W'; from = now - 365*24*3600; days = 52; break;
-                    default: resolution = 'D'; from = now - 30*24*3600; days = 30;
+                // 检查文件是否存在
+                let check = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                let sha = null;
+                if (check.ok) { const exist = await check.json(); sha = exist.sha; }
+                
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: `TradeWise data sync - ${currentUser?.username} - ${new Date().toLocaleString()}`,
+                        content: encoded,
+                        sha: sha
+                    })
+                });
+                
+                if (res.ok) {
+                    status.innerHTML = '✅ Synced!';
+                    setTimeout(() => status.innerHTML = '● Online', 3000);
+                    showToast('Data saved to GitHub!');
+                } else {
+                    status.innerHTML = '❌ Failed';
+                    setTimeout(() => status.innerHTML = '● Online', 3000);
                 }
-
-                const url = `https://finnhub.io/api/v1/stock/candle?symbol=${cleanSymbol}&resolution=${resolution}&from=${from}&to=${now}&token=${FINNHUB_API_KEY}`;
-                const response = await fetch(url);
-                const data = await response.json();
-
-                if (data && data.s === 'ok' && data.c && data.c.length > 0 && data.c.length > 5) {
-                    const candles = data.c.map((c, i) => ({
-                        time: data.t[i],
-                        open: data.o[i],
-                        high: data.h[i],
-                        low: data.l[i],
-                        close: c,
-                        volume: data.v[i]
-                    }));
-                    cachedCandles[cacheKey] = candles;
-                    document.getElementById('apiStatus').innerHTML = '● Live Data';
-                    document.getElementById('apiStatus').style.color = '#00c853';
-                    return candles;
-                }
-            } catch (error) {
-                console.log('Finnhub API error, using mock data');
+            } catch(e) {
+                status.innerHTML = '❌ Error';
+                setTimeout(() => status.innerHTML = '● Online', 3000);
             }
-
-            // API失败，使用模拟数据
-            document.getElementById('apiStatus').innerHTML = '● Demo Mode';
-            document.getElementById('apiStatus').style.color = '#f5a623';
-            const days = timeframe === '1D' ? 24 : timeframe === '1W' ? 30 : timeframe === '1M' ? 30 : timeframe === '3M' ? 90 : 52;
-            const mockCandles = generateMockCandles(symbol, timeframe, days);
-            cachedCandles[cacheKey] = mockCandles;
-            return mockCandles;
+        }
+        
+        async function loadDataFromGitHub() {
+            const repo = document.getElementById('githubRepo').value.trim();
+            const token = document.getElementById('githubToken').value.trim();
+            const status = document.getElementById('cloudStatus');
+            
+            if (!repo || !token) {
+                status.innerHTML = '⚠️ Set repo & token';
+                setTimeout(() => status.innerHTML = '● Online', 3000);
+                return;
+            }
+            
+            const filename = `tradewise_data_${currentUser?.username}.json`;
+            status.innerHTML = '⏳ Loading...';
+            
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    const content = decodeURIComponent(escape(atob(data.content)));
+                    const savedData = JSON.parse(content);
+                    
+                    // 恢复数据
+                    users = savedData.users || users;
+                    portfolioData = savedData.portfolios || portfolioData;
+                    if (savedData.watchlists && savedData.watchlists[currentUser?.id]) {
+                        watchlist = savedData.watchlists[currentUser?.id];
+                        localStorage.setItem('user_watchlist', JSON.stringify(watchlist));
+                    }
+                    
+                    // 保存到本地存储
+                    localStorage.setItem('trading_users', JSON.stringify(users));
+                    localStorage.setItem('trading_portfolios', JSON.stringify(portfolioData));
+                    
+                    // 刷新界面
+                    if (currentUser) {
+                        const portfolio = portfolioData[currentUser.id] || { balance: 100000, holdings: {} };
+                        document.getElementById('balance').textContent = `$${portfolio.balance.toFixed(2)}`;
+                        renderWatchlist();
+                        updatePortfolio();
+                        updateGlobalRanking();
+                    }
+                    
+                    status.innerHTML = '✅ Loaded!';
+                    setTimeout(() => status.innerHTML = '● Online', 3000);
+                    showToast('Data loaded from GitHub!');
+                } else {
+                    status.innerHTML = '⚠️ No saved data';
+                    setTimeout(() => status.innerHTML = '● Online', 3000);
+                }
+            } catch(e) {
+                status.innerHTML = '❌ Error';
+                setTimeout(() => status.innerHTML = '● Online', 3000);
+            }
+        }
+        
+        // ============ 排行榜功能 ============
+        function calculateTotalValue(userId) {
+            const portfolio = portfolioData[userId] || { balance: 100000, holdings: {} };
+            let total = portfolio.balance;
+            for (const [symbol, holding] of Object.entries(portfolio.holdings || {})) {
+                const currentPrice = stocksData[symbol]?.price || realPriceData[symbol] || 150;
+                total += holding.shares * currentPrice;
+            }
+            return total;
+        }
+        
+        function updateGlobalRanking() {
+            const rankings = [];
+            for (const [userId, user] of Object.entries(users)) {
+                const totalValue = calculateTotalValue(userId);
+                rankings.push({
+                    id: userId,
+                    username: user.username,
+                    totalValue: totalValue
+                });
+            }
+            
+            rankings.sort((a, b) => b.totalValue - a.totalValue);
+            
+            const container = document.getElementById('rankingList');
+            if (!container) return;
+            
+            if (rankings.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:20px; color:rgba(255,255,255,0.5);">No users yet</div>';
+                return;
+            }
+            
+            container.innerHTML = rankings.slice(0, 10).map((user, idx) => `
+                <div class="ranking-item ${idx === 0 ? 'ranking-top1' : ''}" style="${idx === 0 ? 'background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,165,0,0.1)); border-radius: 8px; padding: 8px; margin-bottom: 4px;' : ''}">
+                    <div class="ranking-rank">${idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx+1}`}</div>
+                    <div class="ranking-name">${user.username} ${currentUser?.username === user.username ? '(you)' : ''}</div>
+                    <div class="ranking-value">$${user.totalValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                </div>
+            `).join('');
         }
 
-        // 获取实时报价
+        // ============ 股票数据功能 ============
         async function getQuote(symbol) {
             try {
-                let cleanSymbol = symbol.replace('.HK', '').replace('.SS', '');
-                const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${cleanSymbol}&token=${FINNHUB_API_KEY}`);
+                const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
                 const data = await response.json();
                 if (data && data.c && data.c > 0) {
                     return { price: data.c, change: data.d, changePercent: data.dp };
                 }
             } catch (error) {}
-
-            // 使用备用价格
             const basePrice = realPriceData[symbol] || 150;
             const changePercent = (Math.random() - 0.5) * 2;
             return { price: basePrice * (1 + changePercent/100), changePercent: changePercent };
         }
-
+        
+        function generateMockCandles(symbol, days = 30) {
+            const candles = [];
+            const basePrice = realPriceData[symbol] || 150;
+            let currentPrice = basePrice;
+            for (let i = 0; i < days; i++) {
+                const change = (Math.random() - 0.5) * 0.02 * currentPrice;
+                const open = currentPrice;
+                const close = currentPrice + change;
+                candles.push({ time: i, open, high: Math.max(open, close) * 1.01, low: Math.min(open, close) * 0.99, close, volume: Math.random() * 20000000 });
+                currentPrice = close;
+            }
+            return candles;
+        }
+        
+        async function getRealCandles(symbol, timeframe) {
+            const days = timeframe === '1D' ? 24 : timeframe === '1W' ? 30 : timeframe === '1M' ? 30 : timeframe === '3M' ? 90 : 52;
+            return generateMockCandles(symbol, days);
+        }
+        
         async function refreshAllQuotes() {
             for (const stock of watchlist) {
                 const quote = await getQuote(stock.symbol);
-                if (quote) { stock.price = quote.price; stock.changePercent = quote.changePercent; }
+                if (quote) { stock.price = quote.price; stock.changePercent = quote.changePercent; stocksData[stock.symbol] = stock; }
             }
             if (selectedStock) {
                 const quote = await getQuote(selectedStock.symbol);
@@ -321,71 +429,29 @@
             }
             renderWatchlist();
             updatePortfolio();
+            updateGlobalRanking();
             if (selectedStock) document.getElementById('marketPrice').value = `$${selectedStock.price?.toFixed(2) || '0.00'}`;
             updatePreview();
         }
-
+        
         async function renderKline() {
             if (!selectedStock) return;
             const chartDom = document.getElementById('klineChart');
             if (!chartDom) return;
-
-            chartDom.innerHTML = '<div class="loading-spinner">📊 Loading K-Line data...</div>';
-
             const candles = await getRealCandles(selectedStock.symbol, currentTimeframe);
-            if (!candles || candles.length === 0) {
-                chartDom.innerHTML = '<div class="loading-spinner" style="color:#ff3b30;">No data available</div>';
-                return;
-            }
-
             if (klineChart) klineChart.dispose();
             klineChart = echarts.init(chartDom);
-
-            const dates = candles.map((c, i) => i + 1);
             const values = candles.map(c => [c.open, c.close, c.low, c.high]);
-            const volumes = candles.map(c => c.volume);
-
             klineChart.setOption({
-                title: { text: `${selectedStock.symbol} - Candlestick Chart`, textStyle: { color: '#fff' } },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: { type: 'cross' },
-                    backgroundColor: 'rgba(20,24,49,0.95)',
-                    borderColor: '#4f46e5',
-                    textStyle: { color: '#fff' },
-                    formatter: (params) => {
-                        if (!params || params.length === 0) return '';
-                        const v = params[0].value;
-                        return `<strong>${selectedStock.symbol}</strong><br>
-                                Open: <span style="color:#fff">$${v[0].toFixed(2)}</span><br>
-                                High: <span style="color:#00c853">$${v[2].toFixed(2)}</span><br>
-                                Low: <span style="color:#ff3b30">$${v[3].toFixed(2)}</span><br>
-                                Close: <span style="color:#fff">$${v[1].toFixed(2)}</span><br>
-                                Change: <span style="color:${v[1] >= v[0] ? '#00c853' : '#ff3b30'}">${((v[1]-v[0])/v[0]*100).toFixed(2)}%</span>`;
-                    }
-                },
-                grid: [
-                    { left: '10%', right: '8%', top: '10%', height: '65%' },
-                    { left: '10%', right: '8%', top: '80%', height: '12%' }
-                ],
-                xAxis: [
-                    { type: 'category', data: dates, axisLabel: { color: '#fff', rotate: 45 }, axisLine: { lineStyle: { color: '#fff' } } },
-                    { type: 'category', gridIndex: 1, data: dates, axisLabel: { color: '#fff' }, axisLine: { lineStyle: { color: '#fff' } } }
-                ],
-                yAxis: [
-                    { scale: true, axisLabel: { color: '#fff' }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } } },
-                    { scale: true, gridIndex: 1, axisLabel: { color: '#fff' }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } } }
-                ],
-                series: [
-                    { name: 'Candlestick', type: 'candlestick', data: values, itemStyle: { color: '#00c853', color0: '#ff3b30', borderColor: '#00c853', borderColor0: '#ff3b30' } },
-                    { name: 'Volume', type: 'bar', xAxisIndex: 1, yAxisIndex: 1, data: volumes, barWidth: '60%', itemStyle: { color: (params) => values[params.dataIndex][0] <= values[params.dataIndex][1] ? '#00c853' : '#ff3b30' } }
-                ],
+                title: { text: `${selectedStock.symbol} - Candlestick`, textStyle: { color: '#fff' } },
+                tooltip: { trigger: 'axis', backgroundColor: 'rgba(20,24,49,0.95)', textStyle: { color: '#fff' }, formatter: (params) => { const v = params[0].value; return `Open: $${v[0].toFixed(2)}<br>High: $${v[2].toFixed(2)}<br>Low: $${v[3].toFixed(2)}<br>Close: $${v[1].toFixed(2)}`; } },
+                xAxis: { type: 'category', data: candles.map((_, i) => i+1), axisLabel: { color: '#fff' } },
+                yAxis: { scale: true, axisLabel: { color: '#fff' } },
+                series: [{ type: 'candlestick', data: values, itemStyle: { color: '#00c853', color0: '#ff3b30' } }],
                 backgroundColor: 'transparent'
             });
-
-            window.addEventListener('resize', () => klineChart?.resize());
         }
-
+        
         function updateSelectedDisplay() {
             if (!selectedStock) return;
             document.querySelector('.selected-symbol').textContent = selectedStock.symbol;
@@ -394,9 +460,8 @@
             const pct = selectedStock.changePercent || 0;
             change.textContent = `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`;
             change.className = `selected-change ${pct >= 0 ? 'positive' : 'negative'}`;
-            change.style.background = pct >= 0 ? 'rgba(0,200,83,0.2)' : 'rgba(255,59,48,0.2)';
         }
-
+        
         function renderWatchlist() {
             const container = document.getElementById('watchlistContainer');
             container.innerHTML = watchlist.map(stock => `
@@ -408,7 +473,7 @@
                 </div>
             `).join('');
         }
-
+        
         window.selectStock = async (symbol) => {
             const stock = watchlist.find(s => s.symbol === symbol);
             if (stock) {
@@ -421,7 +486,7 @@
                 updatePreview();
             }
         };
-
+        
         window.removeStock = (symbol, event) => {
             event.stopPropagation();
             watchlist = watchlist.filter(s => s.symbol !== symbol);
@@ -429,7 +494,7 @@
             if (selectedStock?.symbol === symbol && watchlist.length > 0) selectStock(watchlist[0].symbol);
             renderWatchlist();
         };
-
+        
         function addCurrentToWatchlist() {
             if (!selectedStock) return;
             if (!watchlist.find(s => s.symbol === selectedStock.symbol)) {
@@ -439,21 +504,16 @@
                 showToast(`Added ${selectedStock.symbol} to watchlist`);
             }
         }
-
+        
         function searchStocks(query) {
             if (!query || query.length < 1) { document.getElementById('searchResults').classList.remove('show'); return; }
             const results = stockDatabase.filter(s => s.symbol.toLowerCase().includes(query.toLowerCase()) || s.name.toLowerCase().includes(query.toLowerCase())).slice(0, 10);
             const container = document.getElementById('searchResults');
             if (results.length === 0) { container.classList.remove('show'); return; }
-            container.innerHTML = results.map(s => `
-                <div class="search-result-item" onclick="addStockFromSearch('${s.symbol}', '${s.name}')">
-                    <div><div class="result-symbol">${s.symbol}</div><div class="result-name">${s.name}</div></div>
-                    <div class="result-market">${s.market}</div>
-                </div>
-            `).join('');
+            container.innerHTML = results.map(s => `<div class="search-result-item" onclick="addStockFromSearch('${s.symbol}', '${s.name}')"><div><div class="result-symbol">${s.symbol}</div><div class="result-name">${s.name}</div></div></div>`).join('');
             container.classList.add('show');
         }
-
+        
         window.addStockFromSearch = async (symbol, name) => {
             if (!watchlist.find(s => s.symbol === symbol)) {
                 watchlist.push({ symbol, name });
@@ -470,7 +530,7 @@
             document.getElementById('searchResults').classList.remove('show');
             showToast(`Added ${symbol}`);
         };
-
+        
         function updatePortfolio() {
             if (!currentUser) return;
             const portfolio = portfolioData[currentUser.id] || { balance: 100000, holdings: {} };
@@ -482,17 +542,16 @@
                 const currentStock = watchlist.find(s => s.symbol === symbol);
                 const currentPrice = currentStock?.price || holding.avgPrice;
                 const pnl = (currentPrice - holding.avgPrice) * holding.shares;
-                const pnlPercent = ((currentPrice - holding.avgPrice) / holding.avgPrice * 100) || 0;
-                return `<div class="portfolio-item"><div class="portfolio-header"><span class="portfolio-symbol">${symbol}</span><span class="portfolio-pnl ${pnl >= 0 ? 'positive' : 'negative'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${pnlPercent.toFixed(2)}%)</span></div>
+                return `<div class="portfolio-item"><div class="portfolio-header"><span>${symbol}</span><span class="${pnl >= 0 ? 'positive' : 'negative'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</span></div>
                         <div class="portfolio-details"><span>${holding.shares} shares</span><span>Avg: $${holding.avgPrice.toFixed(2)}</span><span>Now: $${currentPrice.toFixed(2)}</span></div></div>`;
             }).join('');
         }
-
+        
         function updatePreview() {
             const shares = parseInt(document.getElementById('tradeShares').value) || 0;
             document.getElementById('estimatedTotal').textContent = `$${(shares * (selectedStock?.price || 0)).toFixed(2)}`;
         }
-
+        
         async function executeTrade() {
             if (!currentUser || !selectedStock) return;
             const shares = parseInt(document.getElementById('tradeShares').value);
@@ -507,43 +566,21 @@
                 const h = portfolio.holdings[selectedStock.symbol];
                 h.avgPrice = (h.avgPrice * h.shares + total) / (h.shares + shares);
                 h.shares += shares;
-                showToast(`✓ Bought ${shares} shares of ${selectedStock.symbol}`);
+                showToast(`✓ Bought ${shares} shares`);
             } else {
                 const h = portfolio.holdings[selectedStock.symbol];
                 if (!h || h.shares < shares) { showToast('Insufficient shares', true); return; }
                 portfolio.balance += total;
                 h.shares -= shares;
                 if (h.shares === 0) delete portfolio.holdings[selectedStock.symbol];
-                showToast(`✓ Sold ${shares} shares of ${selectedStock.symbol}`);
+                showToast(`✓ Sold ${shares} shares`);
             }
             portfolioData[currentUser.id] = portfolio;
             localStorage.setItem('trading_portfolios', JSON.stringify(portfolioData));
             updatePortfolio();
+            updateGlobalRanking();
         }
-
-        async function syncToGitHub() {
-            const repo = document.getElementById('githubRepo').value.trim();
-            const token = document.getElementById('githubToken').value.trim();
-            const content = document.getElementById('strategyContent').value.trim();
-            const status = document.getElementById('githubStatus');
-            if (!repo || !token) { status.innerHTML = '⚠️ Fill repo & token'; setTimeout(() => status.innerHTML = '', 3000); return; }
-            if (!content) { status.innerHTML = '⚠️ Enter content'; setTimeout(() => status.innerHTML = '', 3000); return; }
-            status.innerHTML = '⏳ Syncing...';
-            try {
-                const filename = `strategy_${currentUser?.username}_${new Date().toISOString().split('T')[0]}.md`;
-                const encoded = btoa(unescape(encodeURIComponent(content)));
-                let check = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, { headers: { 'Authorization': `Bearer ${token}` } });
-                let sha = null;
-                if (check.ok) { const exist = await check.json(); sha = exist.sha; }
-                const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filename}`, {
-                    method: 'PUT', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: `Update ${new Date().toLocaleString()}`, content: encoded, sha })
-                });
-                if (res.ok) { status.innerHTML = '✅ Synced!'; document.getElementById('strategyContent').value = ''; setTimeout(() => status.innerHTML = '', 3000); }
-                else { status.innerHTML = '❌ Failed'; setTimeout(() => status.innerHTML = '', 3000); }
-            } catch(e) { status.innerHTML = '❌ Error'; setTimeout(() => status.innerHTML = '', 3000); }
-        }
-
+        
         async function askAI(question) {
             if (!question.trim() || !selectedStock) return;
             const div = document.getElementById('aiQuickAnswer');
@@ -551,39 +588,53 @@
             try {
                 const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
                     method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
-                    body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'system', content: `You are a trading expert. Stock: ${selectedStock.symbol} at $${selectedStock.price}` }, { role: 'user', content: question }], max_tokens: 250 })
+                    body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'system', content: `Stock: ${selectedStock.symbol} at $${selectedStock.price}` }, { role: 'user', content: question }], max_tokens: 200 })
                 });
                 const data = await res.json();
                 div.innerHTML = data.choices[0].message.content;
-            } catch(e) { div.innerHTML = '⚠️ AI service unavailable'; }
+            } catch(e) { div.innerHTML = '⚠️ AI unavailable'; }
         }
-
+        
         function showToast(msg, isErr = false) {
             const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
             t.style.background = isErr ? 'rgba(255,59,48,0.9)' : 'rgba(0,200,83,0.9)';
             document.body.appendChild(t);
             setTimeout(() => t.remove(), 3000);
         }
-
+        
         function initAuth() {
-            if (!users['demo']) { users['demo'] = { id: 'demo_001', username: 'demo', password: 'demo123' }; localStorage.setItem('trading_users', JSON.stringify(users)); }
-            const saved = localStorage.getItem('currentUser');
-            if (saved) { currentUser = JSON.parse(saved); showMain(); }
+            const savedUsers = localStorage.getItem('trading_users');
+            if (savedUsers) users = JSON.parse(savedUsers);
+            const savedPortfolios = localStorage.getItem('trading_portfolios');
+            if (savedPortfolios) portfolioData = JSON.parse(savedPortfolios);
+            
+            if (!users['demo']) { users['demo'] = { id: 'demo_001', username: 'demo', password: 'demo123' }; }
+            
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) { currentUser = JSON.parse(savedUser); showMain(); }
             else document.getElementById('authModal').classList.add('active');
         }
-
+        
         async function showMain() {
             document.getElementById('authModal').classList.remove('active');
             document.getElementById('mainApp').style.display = 'grid';
             document.getElementById('userNameDisplay').textContent = currentUser.username;
+            
+            const savedWatchlist = localStorage.getItem('user_watchlist');
+            if (savedWatchlist) watchlist = JSON.parse(savedWatchlist);
+            else watchlist = [{ symbol: 'AAPL', name: 'Apple Inc.' }, { symbol: 'MSFT', name: 'Microsoft' }, { symbol: 'TSLA', name: 'Tesla' }];
+            
             if (!portfolioData[currentUser.id]) portfolioData[currentUser.id] = { balance: 100000, holdings: {} };
+            
             await refreshAllQuotes();
             if (watchlist.length > 0) await selectStock(watchlist[0].symbol);
             updatePortfolio();
+            updateGlobalRanking();
+            
             if (refreshInterval) clearInterval(refreshInterval);
-            refreshInterval = setInterval(() => { refreshAllQuotes(); updatePortfolio(); }, 30000);
+            refreshInterval = setInterval(() => { refreshAllQuotes(); updateGlobalRanking(); }, 30000);
         }
-
+        
         function handleAuth() {
             const u = document.getElementById('authUsername').value, p = document.getElementById('authPassword').value;
             const isLogin = document.getElementById('authTitle').textContent.includes('Login');
@@ -593,21 +644,24 @@
                 else alert('Invalid credentials');
             } else {
                 if (users[u]) { alert('Username exists'); return; }
-                users[u] = { id: Date.now().toString(), username: u, password: p };
+                const newId = Date.now().toString();
+                users[u] = { id: newId, username: u, password: p };
                 localStorage.setItem('trading_users', JSON.stringify(users));
                 currentUser = users[u];
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                portfolioData[newId] = { balance: 100000, holdings: {} };
+                localStorage.setItem('trading_portfolios', JSON.stringify(portfolioData));
                 showMain();
             }
         }
-
+        
         function logout() { currentUser = null; localStorage.removeItem('currentUser'); if (refreshInterval) clearInterval(refreshInterval); document.getElementById('mainApp').style.display = 'none'; document.getElementById('authModal').classList.add('active'); }
-
+        
         // 事件绑定
         document.getElementById('authForm').addEventListener('submit', (e) => { e.preventDefault(); handleAuth(); });
         document.getElementById('authSwitch').addEventListener('click', () => {
             const t = document.getElementById('authTitle'), b = document.getElementById('authSubmitBtn');
-            if (t.textContent.includes('Login')) { t.textContent = 'Create Account'; b.textContent = 'Sign Up'; }
+            if (t.textContent.includes('Login')) { t.textContent = 'Create Account'; b.textContent = 'Sign Up'; } 
             else { t.textContent = 'Login to TradeWise Pro'; b.textContent = 'Login'; }
         });
         document.getElementById('logoutBtn').addEventListener('click', logout);
@@ -615,15 +669,16 @@
         document.getElementById('tradeShares').addEventListener('input', updatePreview);
         document.getElementById('executeTradeBtn').addEventListener('click', executeTrade);
         document.getElementById('addCurrentToWatchlistBtn').addEventListener('click', addCurrentToWatchlist);
-        document.getElementById('syncGithubBtn').addEventListener('click', syncToGitHub);
-        document.getElementById('searchInput').addEventListener('input', (e) => { const q = e.target.value; document.getElementById('clearSearchBtn').style.display = q ? 'block' : 'none'; searchStocks(q); });
-        document.getElementById('clearSearchBtn').addEventListener('click', () => { document.getElementById('searchInput').value = ''; document.getElementById('searchResults').classList.remove('show'); document.getElementById('clearSearchBtn').style.display = 'none'; });
+        document.getElementById('syncDataBtn').addEventListener('click', saveAllDataToGitHub);
+        document.getElementById('loadDataBtn').addEventListener('click', loadDataFromGitHub);
+        document.getElementById('searchInput').addEventListener('input', (e) => { searchStocks(e.target.value); });
+        document.getElementById('clearSearchBtn').addEventListener('click', () => { document.getElementById('searchInput').value = ''; document.getElementById('searchResults').classList.remove('show'); });
         document.addEventListener('click', (e) => { if (!e.target.closest('.search-container')) document.getElementById('searchResults').classList.remove('show'); });
         document.getElementById('buyTab').addEventListener('click', () => { currentOrderType = 'buy'; document.getElementById('buyTab').classList.add('active'); document.getElementById('sellTab').classList.remove('active'); document.getElementById('executeTradeBtn').className = 'submit-btn buy'; document.getElementById('executeTradeBtn').textContent = 'Buy Shares'; });
         document.getElementById('sellTab').addEventListener('click', () => { currentOrderType = 'sell'; document.getElementById('sellTab').classList.add('active'); document.getElementById('buyTab').classList.remove('active'); document.getElementById('executeTradeBtn').className = 'submit-btn sell'; document.getElementById('executeTradeBtn').textContent = 'Sell Shares'; });
         document.querySelectorAll('.timeframe-btn').forEach(btn => { btn.addEventListener('click', async () => { document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentTimeframe = btn.dataset.timeframe; await renderKline(); }); });
         let aiTimer; document.getElementById('aiQuickQuestion').addEventListener('input', (e) => { clearTimeout(aiTimer); aiTimer = setTimeout(() => askAI(e.target.value), 800); });
-
+        
         initAuth();
     </script>
 </body>
