@@ -15,40 +15,46 @@
         .search-container { position: relative; flex: 1; max-width: 400px; }
         .search-input-wrapper { display: flex; align-items: center; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; padding: 6px 16px; }
         .search-input { flex: 1; background: transparent; border: none; color: white; font-size: 0.85rem; padding: 8px 0; outline: none; }
-        .search-results { position: absolute; top: 100%; left: 0; right: 0; background: rgba(20,24,49,0.98); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-top: 8px; max-height: 300px; overflow-y: auto; z-index: 1000; display: none; }
+        .search-input::placeholder { color: rgba(255,255,255,0.4); }
+        .search-results { position: absolute; top: 100%; left: 0; right: 0; background: rgba(20,24,49,0.98); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-top: 8px; max-height: 300px; overflow-y: auto; z-index: 1000; display: none; }
         .search-results.show { display: block; }
-        .search-result-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .search-result-item { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .search-result-item:hover { background: rgba(79,70,229,0.3); }
         .result-symbol { font-weight: 600; }
+        .result-name { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
         .user-controls { display: flex; align-items: center; gap: 16px; }
         .user-name { background: rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; }
         .btn-icon { background: rgba(255,255,255,0.1); border: none; padding: 8px 16px; border-radius: 12px; color: white; cursor: pointer; }
-        .left-panel { background: rgba(10,14,39,0.8); border-right: 1px solid rgba(255,255,255,0.1); overflow-y: auto; height: calc(100vh - 60px); }
-        .panel-header { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 600; display: flex; justify-content: space-between; }
-        .add-to-watchlist-btn { background: rgba(79,70,229,0.3); border: none; padding: 4px 12px; border-radius: 20px; color: #4f46e5; cursor: pointer; }
+        .btn-icon:hover { background: rgba(255,255,255,0.2); }
+        .left-panel { background: rgba(10,14,39,0.8); backdrop-filter: blur(10px); border-right: 1px solid rgba(255,255,255,0.1); overflow-y: auto; height: calc(100vh - 60px); }
+        .panel-header { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .add-to-watchlist-btn { background: rgba(79,70,229,0.3); border: none; padding: 4px 12px; border-radius: 20px; color: #4f46e5; cursor: pointer; font-size: 0.7rem; }
         .watchlist-item { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .watchlist-item:hover { background: rgba(79,70,229,0.2); }
         .watchlist-item.active { background: linear-gradient(135deg, rgba(79,70,229,0.3), rgba(0,200,83,0.1)); border-left: 3px solid #4f46e5; }
+        .watchlist-item-info { flex: 1; }
         .watchlist-symbol { font-weight: 600; }
         .watchlist-name { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
+        .watchlist-quote { text-align: right; }
         .watchlist-price { font-weight: 600; }
         .watchlist-change { font-size: 0.7rem; }
         .remove-stock { background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; margin-left: 8px; opacity: 0; }
         .watchlist-item:hover .remove-stock { opacity: 1; }
+        .remove-stock:hover { color: #ff3b30; }
         .positive { color: #00c853; }
         .negative { color: #ff3b30; }
         .center-panel { background: rgba(10,14,39,0.6); display: flex; flex-direction: column; }
-        .chart-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .chart-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
         .selected-stock-info { display: flex; align-items: baseline; gap: 12px; }
         .selected-symbol { font-size: 1.5rem; font-weight: 700; }
         .selected-price { font-size: 1.8rem; font-weight: 700; }
         .selected-change { font-size: 0.9rem; padding: 4px 12px; border-radius: 20px; }
         .timeframe-selector { display: flex; gap: 8px; }
-        .timeframe-btn { background: rgba(255,255,255,0.1); border: none; padding: 6px 14px; border-radius: 8px; color: white; cursor: pointer; }
+        .timeframe-btn { background: rgba(255,255,255,0.1); border: none; padding: 6px 14px; border-radius: 8px; color: white; cursor: pointer; font-size: 0.8rem; }
         .timeframe-btn.active { background: #4f46e5; }
         .chart-container { flex: 1; padding: 16px; min-height: 450px; }
         #klineChart { width: 100%; height: 500px; }
-        .right-panel { background: rgba(10,14,39,0.8); border-left: 1px solid rgba(255,255,255,0.1); overflow-y: auto; height: calc(100vh - 60px); }
+        .right-panel { background: rgba(10,14,39,0.8); backdrop-filter: blur(10px); border-left: 1px solid rgba(255,255,255,0.1); overflow-y: auto; height: calc(100vh - 60px); }
         .trade-form { padding: 16px; }
         .order-type { display: flex; gap: 12px; margin-bottom: 20px; }
         .order-type-btn { flex: 1; padding: 10px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; }
@@ -58,9 +64,10 @@
         .order-type-btn.sell { background: rgba(255,59,48,0.2); color: #ff3b30; }
         .input-group { margin-bottom: 16px; }
         .input-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; display: block; }
-        .input-field { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 10px 12px; color: white; }
+        .input-field { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 10px 12px; color: white; font-size: 0.9rem; outline: none; }
+        .input-field:focus { border-color: #4f46e5; }
         .trade-preview { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; margin: 16px 0; }
-        .preview-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .preview-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.8rem; }
         .submit-btn { width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; }
         .submit-btn.buy { background: #00c853; color: white; }
         .submit-btn.sell { background: #ff3b30; color: white; }
@@ -69,37 +76,46 @@
         .portfolio-section { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; }
         .portfolio-item { padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 8px; }
         .portfolio-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .portfolio-pnl { font-size: 0.8rem; }
+        .portfolio-details { display: flex; justify-content: space-between; font-size: 0.7rem; color: rgba(255,255,255,0.6); }
         .ranking-container { margin-top: 20px; padding: 12px; background: rgba(79,70,229,0.1); border-radius: 12px; }
         .ranking-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .ranking-rank { width: 40px; }
+        .ranking-rank { width: 40px; font-weight: 700; }
         .ranking-name { flex: 1; }
         .ranking-value { font-weight: 700; color: #00c853; }
         .github-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); }
         .ai-quick-panel { margin-top: 16px; padding: 12px; background: rgba(79,70,229,0.1); border-radius: 12px; }
-        .ai-question-input { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 8px 12px; color: white; margin-bottom: 8px; }
+        .ai-question-input { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 8px 12px; color: white; font-size: 0.8rem; margin-bottom: 8px; }
         .ai-answer { font-size: 0.75rem; color: rgba(255,255,255,0.7); margin-top: 8px; max-height: 100px; overflow-y: auto; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000; justify-content: center; align-items: center; }
-        .modal.active { display: flex; }
+        .modal { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 1000; justify-content: center; align-items: center; }
+        .modal.hidden { display: none; }
         .modal-content { background: rgba(20,24,49,0.95); border-radius: 24px; padding: 32px; width: 90%; max-width: 400px; border: 1px solid rgba(255,255,255,0.2); }
         .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); padding: 12px 24px; border-radius: 40px; z-index: 2000; animation: fadeInUp 0.3s ease; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
     </style>
 </head>
 <body>
+    <!-- 登录模态框 -->
     <div class="modal" id="authModal">
         <div class="modal-content">
             <h2 id="authTitle" style="margin-bottom: 24px; text-align: center;">Login to TradeWise Pro</h2>
-            <form id="authForm">
+            <form id="authForm" onsubmit="return false;">
                 <input type="text" id="authUsername" placeholder="Username" class="input-field" style="margin-bottom: 12px;">
                 <input type="password" id="authPassword" placeholder="Password" class="input-field" style="margin-bottom: 20px;">
-                <button type="submit" class="submit-btn" style="background: #4f46e5; margin-bottom: 12px;" id="authSubmitBtn">Login</button>
+                <button type="button" class="submit-btn" style="background: #4f46e5; margin-bottom: 12px;" id="authSubmitBtn">Login</button>
             </form>
-            <div style="text-align: center; font-size: 0.8rem;">Demo Account: <strong>demo</strong> / <strong>demo123</strong></div>
-            <div style="text-align: center; margin-top: 12px;"><span id="authSwitch" style="color: #4f46e5; cursor: pointer;">Create new account</span></div>
+            <div style="text-align: center; font-size: 0.8rem; margin-top: 12px;">Demo: <strong>demo</strong> / <strong>demo123</strong></div>
+            <div style="text-align: center; margin-top: 16px;">
+                <span id="authSwitch" style="color: #4f46e5; cursor: pointer;">📝 Create new account</span>
+            </div>
         </div>
     </div>
 
-    <div class="trading-container" id="mainApp" style="display: none;">
+    <!-- 主交易界面 -->
+    <div class="trading-container hidden" id="mainApp">
         <div class="top-nav">
             <div class="logo-area"><span class="logo">TradeWise Pro</span><span class="market-status">● Live</span></div>
             <div class="search-container">
@@ -183,8 +199,8 @@
         const DEEPSEEK_API_KEY = "sk-1f33b84b5ed746d09628b7834fc32170";
         
         let currentUser = null;
-        let users = {};      // 格式: { "username": { id, username, password } }
-        let portfolioData = {}; // 格式: { "userId": { balance, holdings } }
+        let users = {};
+        let portfolioData = {};
         let watchlist = [];
         let selectedStock = null;
         let currentOrderType = 'buy';
@@ -199,14 +215,23 @@
             { symbol: 'META', name: 'Meta' }, { symbol: 'JPM', name: 'JPMorgan' }
         ];
 
-        // 加载本地数据
+        function showToast(msg, isError = false) {
+            let oldToast = document.querySelector('.toast');
+            if (oldToast) oldToast.remove();
+            let toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            toast.style.background = isError ? 'rgba(255,59,48,0.9)' : 'rgba(0,200,83,0.9)';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
         function loadLocalData() {
-            const savedUsers = localStorage.getItem('tradewise_users');
+            let savedUsers = localStorage.getItem('tradewise_users');
             if (savedUsers) users = JSON.parse(savedUsers);
-            const savedPortfolios = localStorage.getItem('tradewise_portfolios');
+            let savedPortfolios = localStorage.getItem('tradewise_portfolios');
             if (savedPortfolios) portfolioData = JSON.parse(savedPortfolios);
             
-            // 创建默认 demo 用户
             if (!users['demo']) {
                 users['demo'] = { id: 'user_demo', username: 'demo', password: 'demo123' };
                 localStorage.setItem('tradewise_users', JSON.stringify(users));
@@ -217,36 +242,28 @@
             }
         }
 
-        function saveUsersToLocal() {
-            localStorage.setItem('tradewise_users', JSON.stringify(users));
-        }
+        function saveUsers() { localStorage.setItem('tradewise_users', JSON.stringify(users)); }
+        function savePortfolios() { localStorage.setItem('tradewise_portfolios', JSON.stringify(portfolioData)); }
 
-        function savePortfoliosToLocal() {
-            localStorage.setItem('tradewise_portfolios', JSON.stringify(portfolioData));
-        }
-
-        // 获取实时价格
         async function getQuote(symbol) {
             try {
-                const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
-                const data = await response.json();
-                if (data && data.c) {
-                    return { price: data.c, changePercent: data.dp };
-                }
+                let res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
+                let data = await res.json();
+                if (data && data.c) return { price: data.c, changePercent: data.dp };
             } catch(e) {}
-            const prices = { 'AAPL': 175, 'MSFT': 420, 'TSLA': 240, 'GOOGL': 138, 'AMZN': 145, 'NVDA': 900 };
-            const base = prices[symbol] || 150;
+            let prices = { 'AAPL': 175, 'MSFT': 420, 'TSLA': 240, 'GOOGL': 138, 'AMZN': 145, 'NVDA': 900 };
+            let base = prices[symbol] || 150;
             return { price: base * (1 + (Math.random() - 0.5) * 0.02), changePercent: (Math.random() - 0.5) * 2 };
         }
 
         async function refreshPrices() {
-            for (const stock of watchlist) {
-                const quote = await getQuote(stock.symbol);
+            for (let stock of watchlist) {
+                let quote = await getQuote(stock.symbol);
                 stock.price = quote.price;
                 stock.changePercent = quote.changePercent;
             }
             if (selectedStock) {
-                const quote = await getQuote(selectedStock.symbol);
+                let quote = await getQuote(selectedStock.symbol);
                 selectedStock.price = quote.price;
                 selectedStock.changePercent = quote.changePercent;
                 document.getElementById('currentPrice').textContent = `$${selectedStock.price.toFixed(2)}`;
@@ -261,13 +278,10 @@
             updatePreview();
         }
 
-        // 生成K线
-        function generateCandles(symbol, days = 30) {
-            const candles = [];
-            let price = 150;
+        function generateCandles(days = 30) {
+            let candles = [], price = 150;
             for (let i = 0; i < days; i++) {
-                let open = price;
-                let close = price * (1 + (Math.random() - 0.5) * 0.03);
+                let open = price, close = price * (1 + (Math.random() - 0.5) * 0.03);
                 candles.push({ open, high: Math.max(open, close) * 1.01, low: Math.min(open, close) * 0.99, close });
                 price = close;
             }
@@ -276,7 +290,7 @@
 
         async function renderKline() {
             if (!selectedStock) return;
-            const candles = generateCandles(selectedStock.symbol);
+            let candles = generateCandles();
             if (klineChart) klineChart.dispose();
             klineChart = echarts.init(document.getElementById('klineChart'));
             klineChart.setOption({
@@ -290,11 +304,11 @@
         }
 
         function renderWatchlist() {
-            const container = document.getElementById('watchlistContainer');
+            let container = document.getElementById('watchlistContainer');
             container.innerHTML = watchlist.map(stock => `
                 <div class="watchlist-item ${selectedStock?.symbol === stock.symbol ? 'active' : ''}" onclick="selectStock('${stock.symbol}')">
-                    <div><div class="watchlist-symbol">${stock.symbol}</div><div class="watchlist-name">${stock.name}</div></div>
-                    <div><div class="watchlist-price">$${stock.price?.toFixed(2) || '0.00'}</div>
+                    <div class="watchlist-item-info"><div class="watchlist-symbol">${stock.symbol}</div><div class="watchlist-name">${stock.name}</div></div>
+                    <div class="watchlist-quote"><div class="watchlist-price">$${stock.price?.toFixed(2) || '0.00'}</div>
                     <div class="watchlist-change ${stock.changePercent >= 0 ? 'positive' : 'negative'}">${stock.changePercent >= 0 ? '+' : ''}${stock.changePercent?.toFixed(2) || '0'}%</div></div>
                     <button class="remove-stock" onclick="removeStock('${stock.symbol}', event)">✕</button>
                 </div>
@@ -337,7 +351,7 @@
             let results = stockDatabase.filter(s => s.symbol.toLowerCase().includes(query.toLowerCase()) || s.name.toLowerCase().includes(query.toLowerCase())).slice(0, 8);
             let container = document.getElementById('searchResults');
             if (!results.length) { container.classList.remove('show'); return; }
-            container.innerHTML = results.map(s => `<div class="search-result-item" onclick="addStock('${s.symbol}', '${s.name}')"><div class="result-symbol">${s.symbol}</div><div>${s.name}</div></div>`).join('');
+            container.innerHTML = results.map(s => `<div class="search-result-item" onclick="addStock('${s.symbol}', '${s.name}')"><div class="result-symbol">${s.symbol}</div><div class="result-name">${s.name}</div></div>`).join('');
             container.classList.add('show');
         }
 
@@ -369,7 +383,7 @@
                 let current = stock?.price || h.avgPrice;
                 let pnl = (current - h.avgPrice) * h.shares;
                 return `<div class="portfolio-item"><div class="portfolio-header"><span>${symbol}</span><span class="${pnl >= 0 ? 'positive' : 'negative'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</span></div>
-                        <div><span>${h.shares} shares</span><span> Avg: $${h.avgPrice.toFixed(2)}</span></div></div>`;
+                        <div class="portfolio-details"><span>${h.shares} shares</span><span>Avg: $${h.avgPrice.toFixed(2)}</span></div></div>`;
             }).join('');
         }
 
@@ -403,12 +417,11 @@
                 showToast(`Sold ${shares} shares`);
             }
             portfolioData[currentUser.id] = portfolio;
-            savePortfoliosToLocal();
+            savePortfolios();
             updatePortfolio();
             updateRanking();
         }
 
-        // 计算用户总资产
         function calculateTotalValue(userId) {
             let portfolio = portfolioData[userId] || { balance: 100000, holdings: {} };
             let total = portfolio.balance;
@@ -445,8 +458,8 @@
             let password = document.getElementById('authPassword').value;
             
             if (!username || !password) {
-                alert('Please enter username and password');
-                return false;
+                showToast('Please enter username and password', true);
+                return;
             }
             
             let user = users[username];
@@ -454,10 +467,8 @@
                 currentUser = user;
                 localStorage.setItem('tradewise_currentUser', JSON.stringify(user));
                 showMainApp();
-                return true;
             } else {
-                alert('Invalid username or password');
-                return false;
+                showToast('Invalid username or password', true);
             }
         }
 
@@ -466,37 +477,33 @@
             let password = document.getElementById('authPassword').value;
             
             if (!username || !password) {
-                alert('Please enter username and password');
-                return false;
+                showToast('Please enter username and password', true);
+                return;
             }
             
             if (username.length < 3) {
-                alert('Username must be at least 3 characters');
-                return false;
+                showToast('Username must be at least 3 characters', true);
+                return;
             }
             
             if (users[username]) {
-                alert('Username already exists! Try another one.');
-                return false;
+                showToast('Username already exists!', true);
+                return;
             }
             
-            // 创建新用户
             let newId = 'user_' + Date.now();
             let newUser = { id: newId, username: username, password: password };
             users[username] = newUser;
             portfolioData[newId] = { balance: 100000, holdings: {} };
             
-            // 保存到本地
-            saveUsersToLocal();
-            savePortfoliosToLocal();
+            saveUsers();
+            savePortfolios();
             
-            // 自动登录
             currentUser = newUser;
             localStorage.setItem('tradewise_currentUser', JSON.stringify(newUser));
             
-            alert(`Account created successfully! Welcome ${username}!`);
+            showToast(`Welcome ${username}! Account created.`);
             showMainApp();
-            return true;
         }
 
         function handleAuth() {
@@ -516,25 +523,34 @@
             if (title.textContent === 'Login to TradeWise Pro') {
                 title.textContent = 'Create Account';
                 btn.textContent = 'Sign Up';
-                switchText.innerHTML = 'Back to Login';
+                switchText.innerHTML = '← Back to Login';
             } else {
                 title.textContent = 'Login to TradeWise Pro';
                 btn.textContent = 'Login';
-                switchText.innerHTML = 'Create new account';
+                switchText.innerHTML = '📝 Create new account';
             }
+            
+            // 清空输入框
+            document.getElementById('authUsername').value = '';
+            document.getElementById('authPassword').value = '';
         }
 
         function logout() {
             currentUser = null;
             localStorage.removeItem('tradewise_currentUser');
             if (refreshInterval) clearInterval(refreshInterval);
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('authModal').classList.add('active');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('authModal').classList.remove('hidden');
+            // 重置为登录模式
+            document.getElementById('authTitle').textContent = 'Login to TradeWise Pro';
+            document.getElementById('authSubmitBtn').textContent = 'Login';
+            document.getElementById('authSwitch').innerHTML = '📝 Create new account';
         }
 
         async function showMainApp() {
-            document.getElementById('authModal').classList.remove('active');
-            document.getElementById('mainApp').style.display = 'grid';
+            // 隐藏登录框，显示主界面
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
             document.getElementById('userNameDisplay').textContent = currentUser.username;
             
             // 加载自选股
@@ -562,7 +578,7 @@
         async function syncToGitHub() {
             let repo = document.getElementById('githubRepo').value.trim();
             let token = document.getElementById('githubToken').value.trim();
-            if (!repo || !token) { alert('Enter repo and token'); return; }
+            if (!repo || !token) { showToast('Enter repo and token', true); return; }
             
             let allData = { users, portfolios: portfolioData, watchlist, timestamp: new Date().toISOString() };
             let content = btoa(unescape(encodeURIComponent(JSON.stringify(allData, null, 2))));
@@ -588,7 +604,7 @@
         async function loadFromGitHub() {
             let repo = document.getElementById('githubRepo').value.trim();
             let token = document.getElementById('githubToken').value.trim();
-            if (!repo || !token) { alert('Enter repo and token'); return; }
+            if (!repo || !token) { showToast('Enter repo and token', true); return; }
             
             let filename = `tradewise_backup_${currentUser.username}.json`;
             try {
@@ -601,8 +617,8 @@
                     if (saved.users) users = saved.users;
                     if (saved.portfolios) portfolioData = saved.portfolios;
                     if (saved.watchlist) watchlist = saved.watchlist;
-                    saveUsersToLocal();
-                    savePortfoliosToLocal();
+                    saveUsers();
+                    savePortfolios();
                     localStorage.setItem('tradewise_watchlist', JSON.stringify(watchlist));
                     await refreshPrices();
                     renderWatchlist();
@@ -611,15 +627,6 @@
                     showToast('Loaded from GitHub!');
                 } else showToast('No backup found', true);
             } catch(e) { showToast('Error loading', true); }
-        }
-
-        function showToast(msg, isErr = false) {
-            let t = document.createElement('div');
-            t.className = 'toast';
-            t.textContent = msg;
-            t.style.background = isErr ? 'rgba(255,59,48,0.9)' : 'rgba(0,200,83,0.9)';
-            document.body.appendChild(t);
-            setTimeout(() => t.remove(), 3000);
         }
 
         async function askAI() {
@@ -638,7 +645,7 @@
             } catch(e) { div.innerHTML = 'AI unavailable'; }
         }
 
-        // 初始化
+        // ============ 初始化 ============
         loadLocalData();
         
         // 检查是否已登录
@@ -648,14 +655,16 @@
             if (currentUser && users[currentUser.username]) {
                 showMainApp();
             } else {
-                document.getElementById('authModal').classList.add('active');
+                document.getElementById('authModal').classList.remove('hidden');
+                document.getElementById('mainApp').classList.add('hidden');
             }
         } else {
-            document.getElementById('authModal').classList.add('active');
+            document.getElementById('authModal').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
         }
 
         // 事件绑定
-        document.getElementById('authForm').addEventListener('submit', (e) => { e.preventDefault(); handleAuth(); });
+        document.getElementById('authSubmitBtn').addEventListener('click', handleAuth);
         document.getElementById('authSwitch').addEventListener('click', toggleAuthMode);
         document.getElementById('logoutBtn').addEventListener('click', logout);
         document.getElementById('refreshBtn').addEventListener('click', () => { refreshPrices(); if(selectedStock) renderKline(); });
@@ -665,6 +674,7 @@
         document.getElementById('syncDataBtn').addEventListener('click', syncToGitHub);
         document.getElementById('loadDataBtn').addEventListener('click', loadFromGitHub);
         document.getElementById('searchInput').addEventListener('input', (e) => searchStocks(e.target.value));
+        
         document.getElementById('buyTab').addEventListener('click', () => {
             currentOrderType = 'buy';
             document.getElementById('buyTab').classList.add('active');
@@ -679,6 +689,7 @@
             document.getElementById('executeTradeBtn').className = 'submit-btn sell';
             document.getElementById('executeTradeBtn').textContent = 'Sell';
         });
+        
         document.querySelectorAll('.timeframe-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
@@ -687,6 +698,7 @@
                 await renderKline();
             });
         });
+        
         let aiTimer;
         document.getElementById('aiQuickQuestion').addEventListener('input', (e) => {
             clearTimeout(aiTimer);
@@ -696,6 +708,10 @@
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.search-container')) document.getElementById('searchResults').classList.remove('show');
         });
+        
+        // 按 Enter 键也可以提交
+        document.getElementById('authUsername').addEventListener('keypress', (e) => { if(e.key === 'Enter') handleAuth(); });
+        document.getElementById('authPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') handleAuth(); });
     </script>
 </body>
 </html>
