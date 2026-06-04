@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>TradeWise Pro | 智能交易 + 模拟交易系统</title>
+    <title>TradeWise Pro | AI智能交易 + 排行榜 + DeepSeek教学</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <style>
         * {
@@ -111,14 +111,14 @@
             text-align: center;
         }
 
-        /* 主交易界面 (初始隐藏) */
+        /* 主交易界面 */
         .trading-app {
             display: none;
         }
 
         .trading-container {
             display: grid;
-            grid-template-columns: 320px 1fr 340px;
+            grid-template-columns: 280px 1fr 360px;
             gap: 1px;
             background: rgba(255, 255, 255, 0.05);
             min-height: 100vh;
@@ -162,7 +162,7 @@
 
         .search-input-wrapper {
             display: flex;
-            align-items: center;
+ align-items: center;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 30px;
@@ -181,18 +181,6 @@
             font-size: 0.85rem;
             padding: 8px 0;
             outline: none;
-        }
-
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .search-clear {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.4);
-            cursor: pointer;
-            font-size: 1rem;
         }
 
         .search-results {
@@ -219,22 +207,12 @@
             padding: 12px 16px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             cursor: pointer;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .search-result-item:hover {
             background: rgba(79, 70, 229, 0.3);
-        }
-
-        .result-symbol {
-            font-weight: 600;
-        }
-
-        .result-name {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.5);
         }
 
         .user-controls {
@@ -259,13 +237,8 @@
             cursor: pointer;
         }
 
-        .btn-icon:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
         .left-panel {
             background: rgba(10, 14, 39, 0.8);
-            backdrop-filter: blur(10px);
             border-right: 1px solid rgba(255, 255, 255, 0.1);
             overflow-y: auto;
             height: calc(100vh - 60px);
@@ -278,16 +251,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .add-to-watchlist-btn {
-            background: rgba(79, 70, 229, 0.3);
-            border: none;
-            padding: 4px 12px;
-            border-radius: 20px;
-            color: #4f46e5;
-            cursor: pointer;
-            font-size: 0.7rem;
         }
 
         .watchlist-item {
@@ -308,29 +271,12 @@
             border-left: 3px solid #4f46e5;
         }
 
-        .watchlist-item-info {
-            flex: 1;
-        }
-
         .watchlist-symbol {
             font-weight: 600;
         }
 
-        .watchlist-name {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .watchlist-quote {
-            text-align: right;
-        }
-
         .watchlist-price {
             font-weight: 600;
-        }
-
-        .watchlist-change {
-            font-size: 0.7rem;
         }
 
         .remove-stock {
@@ -338,16 +284,11 @@
             border: none;
             color: rgba(255, 255, 255, 0.3);
             cursor: pointer;
-            margin-left: 8px;
             opacity: 0;
         }
 
         .watchlist-item:hover .remove-stock {
             opacity: 1;
-        }
-
-        .remove-stock:hover {
-            color: #ff3b30;
         }
 
         .positive {
@@ -367,9 +308,6 @@
         .chart-header {
             padding: 16px 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .current-symbol {
@@ -379,7 +317,7 @@
 
         .chart-container {
             flex: 1;
-            min-height: 450px;
+            min-height: 400px;
             width: 100%;
             padding: 12px;
         }
@@ -387,17 +325,17 @@
         .right-panel {
             background: rgba(10, 14, 39, 0.8);
             border-left: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            padding: 16px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
         }
 
         .info-card {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 16px;
+            border-radius: 16px;
+            padding: 14px;
         }
 
         .trade-card {
@@ -409,8 +347,6 @@
             display: flex;
             gap: 12px;
             margin: 12px 0;
-            align-items: center;
-            flex-wrap: wrap;
         }
 
         .trade-input {
@@ -420,57 +356,130 @@
             padding: 8px 12px;
             color: white;
             flex: 1;
-            min-width: 100px;
-        }
-
-        .trade-buttons {
-            display: flex;
-            gap: 12px;
         }
 
         .buy-btn {
             background: #00c853;
-            color: white;
             border: none;
             padding: 8px 20px;
             border-radius: 30px;
-            font-weight: bold;
+            color: white;
             cursor: pointer;
         }
 
         .sell-btn {
             background: #ff3b30;
-            color: white;
             border: none;
             padding: 8px 20px;
             border-radius: 30px;
-            font-weight: bold;
+            color: white;
             cursor: pointer;
         }
 
         .position-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .asset-summary {
             display: flex;
             justify-content: space-between;
-            margin-top: 12px;
-            padding-top: 12px;
+            margin-top: 10px;
+            padding-top: 10px;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .rank-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.8rem;
+        }
+
+        .rank-number {
+            width: 30px;
+            font-weight: bold;
+        }
+
+        .rank-name {
+            flex: 1;
+        }
+
+        .rank-asset {
+            text-align: right;
+        }
+
+        .rank-current {
+            background: rgba(79, 70, 229, 0.3);
+            border-radius: 8px;
+            padding: 8px;
+            margin: 4px 0;
+        }
+
+        .ai-message {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-top: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .ai-loading {
+            color: #4f46e5;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+
+        .refresh-rank-btn {
+            background: rgba(79, 70, 229, 0.3);
+            border: none;
+            padding: 4px 10px;
+            border-radius: 16px;
+            color: #4f46e5;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        h4 {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
 
         .logout-btn {
             background: rgba(255, 59, 48, 0.2);
             border: 1px solid rgba(255, 59, 48, 0.5);
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 59, 48, 0.4);
         }
     </style>
 </head>
@@ -484,8 +493,8 @@
             <button class="auth-tab" data-tab="register">注册</button>
         </div>
         <div id="loginForm" class="auth-form">
-            <input type="text" id="loginUsername" placeholder="用户名" autocomplete="username">
-            <input type="password" id="loginPassword" placeholder="密码" autocomplete="current-password">
+            <input type="text" id="loginUsername" placeholder="用户名">
+            <input type="password" id="loginPassword" placeholder="密码">
             <button class="auth-btn" id="doLoginBtn">登录 TradeWise</button>
             <div id="loginError" class="auth-error"></div>
         </div>
@@ -502,12 +511,11 @@
 <div id="tradingApp" class="trading-app">
     <div class="trading-container">
         <div class="top-nav">
-            <div class="logo">📈 TradeWise Pro · 模拟交易</div>
-            <div class="market-status">🟢 模拟环境 | 即时成交</div>
+            <div class="logo">📈 TradeWise Pro · AI智能交易</div>
+            <div class="market-status">🟢 模拟环境 | DeepSeek AI 驱动</div>
             <div class="search-container">
                 <div class="search-input-wrapper">
-                    <input type="text" id="globalSearchInput" class="search-input" placeholder="搜索股票 (AAPL, TSLA, 000001)...">
-                    <button class="search-clear" id="clearSearchBtn">✕</button>
+                    <input type="text" id="globalSearchInput" class="search-input" placeholder="搜索股票...">
                 </div>
                 <div id="searchResults" class="search-results"></div>
             </div>
@@ -521,9 +529,15 @@
         <div class="left-panel">
             <div class="panel-header">
                 <span>⭐ 自选股</span>
-                <button id="addCurrentToWatchlist" class="add-to-watchlist-btn">+ 添加当前</button>
+                <button id="addCurrentToWatchlist" class="refresh-rank-btn">+ 添加当前</button>
             </div>
             <div id="watchlistContainer"></div>
+            
+            <div class="panel-header" style="margin-top: 16px;">
+                <span>🏆 资产排行榜</span>
+                <button id="refreshRankBtn" class="refresh-rank-btn">刷新</button>
+            </div>
+            <div id="rankContainer"></div>
         </div>
 
         <!-- 中心K线图区域 -->
@@ -531,30 +545,28 @@
             <div class="chart-header">
                 <div>
                     <span class="current-symbol" id="currentSymbol">AAPL</span>
-                    <span id="currentPrice" style="margin-left: 12px; font-size: 1.2rem;">$---</span>
-                </div>
-                <div>
-                    <span id="currentChange" class="positive">0.00%</span>
+                    <span id="currentPrice" style="margin-left: 12px;">$---</span>
+                    <span id="currentChange" class="positive" style="margin-left: 12px;">0.00%</span>
                 </div>
             </div>
             <div id="klineChart" class="chart-container"></div>
         </div>
 
-        <!-- 右侧交易面板 -->
+        <!-- 右侧面板 -->
         <div class="right-panel">
+            <!-- 交易卡片 -->
             <div class="info-card trade-card">
                 <h4>💰 模拟交易</h4>
-                <div id="tradeSymbol" style="font-weight: bold; margin: 8px 0;">当前: AAPL</div>
+                <div id="tradeSymbol" style="margin: 8px 0;">当前: AAPL</div>
                 <div class="trade-input-group">
-                    <input type="number" id="tradeQuantity" placeholder="数量" class="trade-input" value="1" step="1" min="0.01">
-                    <div class="trade-buttons">
-                        <button id="buyBtn" class="buy-btn">买入</button>
-                        <button id="sellBtn" class="sell-btn">卖出</button>
-                    </div>
+                    <input type="number" id="tradeQuantity" placeholder="数量" class="trade-input" value="1">
+                    <button id="buyBtn" class="buy-btn">买入</button>
+                    <button id="sellBtn" class="sell-btn">卖出</button>
                 </div>
-                <div id="tradeMessage" style="font-size: 0.75rem; color: #ffaa44; margin-top: 6px;"></div>
+                <div id="tradeMessage" style="font-size: 0.7rem; color: #ffaa44;"></div>
             </div>
 
+            <!-- 持仓与统计 -->
             <div class="info-card">
                 <h4>💼 我的持仓</h4>
                 <div id="positionsContainer">加载中...</div>
@@ -568,113 +580,170 @@
                 </div>
             </div>
 
+            <!-- 更多统计信息 -->
             <div class="info-card">
-                <h4>📊 市场快讯</h4>
-                <p style="font-size: 0.8rem; margin-top: 8px;">模拟交易即时成交，无手续费<br>价格基于最新K线收盘价</p>
+                <h4>📊 投资统计</h4>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-item"><div class="stat-value" id="todayProfit">$0</div><div class="stat-label">今日盈亏</div></div>
+                    <div class="stat-item"><div class="stat-value" id="totalProfit">$0</div><div class="stat-label">总盈亏</div></div>
+                    <div class="stat-item"><div class="stat-value" id="winRate">0%</div><div class="stat-label">胜率</div></div>
+                    <div class="stat-item"><div class="stat-value" id="bestStock">-</div><div class="stat-label">最佳持仓</div></div>
+                </div>
+            </div>
+
+            <!-- AI 炒股教学 -->
+            <div class="info-card">
+                <h4>🤖 DeepSeek AI 投资顾问</h4>
+                <button id="askAiBtn" style="width:100%; padding:8px; background:#4f46e5; border:none; border-radius:20px; color:white; cursor:pointer; margin-bottom:10px;">
+                    💡 获取 AI 投资建议
+                </button>
+                <div id="aiMessage" class="ai-message">
+                    点击上方按钮，AI 将基于你的持仓和市场情况给出专业建议...
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // ---------- 用户 JSON 存储 (localStorage 模拟仓库) ----------
-    const USERS_DB_KEY = 'tradewise_users_db';
-    function initUserDatabase() {
-        if (!localStorage.getItem(USERS_DB_KEY)) {
-            const defaultUsers = [
-                { username: "demo", password: "demo123", watchlist: ["AAPL", "TSLA", "MSFT"], cash: 100000, positions: {} }
-            ];
-            localStorage.setItem(USERS_DB_KEY, JSON.stringify(defaultUsers));
-        }
-    }
-    function getUsers() { return JSON.parse(localStorage.getItem(USERS_DB_KEY)) || []; }
-    function saveUsers(users) { localStorage.setItem(USERS_DB_KEY, JSON.stringify(users)); }
-    function findUser(username) { return getUsers().find(u => u.username === username); }
-    
-    function registerUser(username, password) {
-        const users = getUsers();
-        if (users.find(u => u.username === username)) return { success: false, msg: "用户名已存在" };
-        if (username.length < 3 || username.length > 20) return { success: false, msg: "用户名长度3-20字符" };
-        if (password.length < 4) return { success: false, msg: "密码至少4位" };
-        const newUser = { username, password, watchlist: ["AAPL", "TSLA", "MSFT"], cash: 100000, positions: {} };
-        users.push(newUser);
-        saveUsers(users);
-        return { success: true };
-    }
-    
-    function loginUser(username, password) {
-        const user = findUser(username);
-        if (user && user.password === password) {
-            sessionStorage.setItem('currentUser', JSON.stringify({ username: user.username, watchlist: user.watchlist, cash: user.cash, positions: user.positions }));
-            return { success: true };
-        }
-        return { success: false, msg: "用户名或密码错误" };
-    }
-    
-    function getCurrentUser() {
-        const data = sessionStorage.getItem('currentUser');
-        return data ? JSON.parse(data) : null;
-    }
-    
-    function syncUserToStorage(userData) {
-        const users = getUsers();
-        const idx = users.findIndex(u => u.username === userData.username);
-        if (idx !== -1) {
-            users[idx] = userData;
-            saveUsers(users);
-            sessionStorage.setItem('currentUser', JSON.stringify({ username: userData.username, watchlist: userData.watchlist, cash: userData.cash, positions: userData.positions }));
-            return true;
-        }
-        return false;
-    }
-    
-    function updateCurrentUserWatchlist(newWatchlist) {
-        const cur = getCurrentUser();
-        if (!cur) return false;
-        const fullUser = findUser(cur.username);
-        if (fullUser) {
-            fullUser.watchlist = newWatchlist;
-            syncUserToStorage(fullUser);
-            return true;
-        }
-        return false;
-    }
-    
-    function logout() {
-        sessionStorage.removeItem('currentUser');
-        document.getElementById('authOverlay').style.display = 'flex';
-        document.getElementById('tradingApp').style.display = 'none';
+    // ==================== GitHub 配置 ====================
+    const GITHUB_TOKEN = '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';
+    const GITHUB_USER = 'ponginloi';
+    const GITHUB_REPO = 'trading-strategies';
+    const GITHUB_API = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents`;
+    const GITHUB_RAW = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main`;
+
+    // DeepSeek API 配置
+    const DEEPSEEK_API_KEY = "sk-1f33b84b5ed746d09628b7834fc32170";
+    const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
+
+    // ==================== 辅助函数 ====================
+    function encodeToBase64(obj) {
+        return btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
     }
 
-    // ---------- 股票数据模拟 ----------
+    async function getFileSha(path) {
+        try {
+            const response = await fetch(`${GITHUB_API}/${path}`, {
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+            });
+            if (response.status === 404) return null;
+            const data = await response.json();
+            return data.sha;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async function fetchUserFile(username) {
+        try {
+            const response = await fetch(`${GITHUB_RAW}/users/${username}.json`);
+            if (response.status === 404) return null;
+            return await response.json();
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async function saveUserFile(username, userData) {
+        const path = `users/${username}.json`;
+        const existingSha = await getFileSha(path);
+        const content = encodeToBase64(userData);
+        
+        const body = { message: existingSha ? `更新用户 ${username}` : `创建用户 ${username}`, content: content, branch: 'main' };
+        if (existingSha) body.sha = existingSha;
+        
+        const response = await fetch(`${GITHUB_API}/${path}`, {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        return response.ok;
+    }
+
+    async function getAllUsers() {
+        try {
+            const response = await fetch(`${GITHUB_API}/users`, {
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+            });
+            const data = await response.json();
+            if (!Array.isArray(data)) return [];
+            const users = [];
+            for (const item of data) {
+                if (item.name && item.name.endsWith('.json')) {
+                    const userData = await fetchUserFile(item.name.replace('.json', ''));
+                    if (userData) users.push(userData);
+                }
+            }
+            return users;
+        } catch (e) {
+            return [];
+        }
+    }
+
+    // ==================== 用户操作 ====================
+    async function registerUser(username, password) {
+        if (username.length < 3 || username.length > 20) return { success: false, msg: "用户名长度3-20字符" };
+        if (password.length < 4) return { success: false, msg: "密码至少4位" };
+        
+        const existing = await fetchUserFile(username);
+        if (existing) return { success: false, msg: "用户名已存在" };
+        
+        const newUser = { username, password, watchlist: ["AAPL", "TSLA", "MSFT"], cash: 100000, positions: {}, tradeHistory: [] };
+        try {
+            await saveUserFile(username, newUser);
+            return { success: true };
+        } catch (e) {
+            return { success: false, msg: "网络错误" };
+        }
+    }
+
+    async function loginUser(username, password) {
+        const userData = await fetchUserFile(username);
+        if (!userData) return { success: false, msg: "用户名不存在" };
+        if (userData.password !== password) return { success: false, msg: "密码错误" };
+        
+        sessionStorage.setItem('currentUser', JSON.stringify({
+            username: userData.username, watchlist: userData.watchlist, cash: userData.cash, positions: userData.positions
+        }));
+        return { success: true };
+    }
+
+    async function syncUserToGitHub(userData) {
+        try {
+            const fullUserData = { ...userData };
+            await saveUserFile(userData.username, fullUserData);
+            sessionStorage.setItem('currentUser', JSON.stringify({
+                username: userData.username, watchlist: userData.watchlist, cash: userData.cash, positions: userData.positions
+            }));
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    async function getCurrentUserFromGitHub() {
+        const sessionData = sessionStorage.getItem('currentUser');
+        if (!sessionData) return null;
+        const parsed = JSON.parse(sessionData);
+        return await fetchUserFile(parsed.username);
+    }
+
+    // ==================== 股票数据 ====================
     const stockDB = {
-        "AAPL": { name: "Apple Inc.", market: "NASDAQ" },
-        "TSLA": { name: "Tesla, Inc.", market: "NASDAQ" },
-        "MSFT": { name: "Microsoft", market: "NASDAQ" },
-        "GOOGL": { name: "Alphabet", market: "NASDAQ" },
-        "AMZN": { name: "Amazon", market: "NASDAQ" },
-        "BTC": { name: "Bitcoin", market: "CRYPTO" },
-        "000001": { name: "平安银行", market: "SZSE" },
-        "600519": { name: "贵州茅台", market: "SSE" }
+        "AAPL": { name: "Apple Inc.", market: "NASDAQ" }, "TSLA": { name: "Tesla", market: "NASDAQ" },
+        "MSFT": { name: "Microsoft", market: "NASDAQ" }, "GOOGL": { name: "Alphabet", market: "NASDAQ" },
+        "AMZN": { name: "Amazon", market: "NASDAQ" }, "BTC": { name: "Bitcoin", market: "CRYPTO" },
+        "000001": { name: "平安银行", market: "SZSE" }, "600519": { name: "贵州茅台", market: "SSE" }
     };
-    
+
     function generateKlineData(symbol, days = 40) {
-        let basePrice = 100;
-        if (symbol === 'AAPL') basePrice = 175;
-        else if (symbol === 'TSLA') basePrice = 240;
-        else if (symbol === 'MSFT') basePrice = 380;
-        else if (symbol === 'GOOGL') basePrice = 140;
-        else if (symbol === 'AMZN') basePrice = 130;
-        else if (symbol === 'BTC') basePrice = 43000;
-        else if (symbol === '000001') basePrice = 11.5;
-        else if (symbol === '600519') basePrice = 1680;
-        else basePrice = 50;
+        let basePrice = { "AAPL":175, "TSLA":240, "MSFT":380, "GOOGL":140, "AMZN":130, "BTC":43000, "000001":11.5, "600519":1680 }[symbol] || 50;
         let volatility = symbol === 'BTC' ? 0.03 : 0.018;
         let data = [];
         let currentDate = new Date();
         for (let i = days; i >= 0; i--) {
-            let date = new Date();
-            date.setDate(currentDate.getDate() - i);
+            let date = new Date(); date.setDate(currentDate.getDate() - i);
             let dateStr = `${date.getMonth()+1}/${date.getDate()}`;
             let open = basePrice * (1 + (Math.random() - 0.5) * volatility);
             let close = open * (1 + (Math.random() - 0.5) * volatility);
@@ -685,64 +754,232 @@
         }
         return data;
     }
+
     let klineCache = {};
     function getKline(symbol) {
         if (!klineCache[symbol]) klineCache[symbol] = generateKlineData(symbol, 35);
         return klineCache[symbol];
     }
-    function getCurrentPrice(symbol) {
-        const k = getKline(symbol);
-        return k.length ? k[k.length-1][2] : 100;
-    }
+    function getCurrentPrice(symbol) { return getKline(symbol).slice(-1)[0][2]; }
     function getChangePercent(symbol) {
         const k = getKline(symbol);
         if (k.length < 2) return 0;
         return ((k[k.length-1][2] - k[k.length-2][2]) / k[k.length-2][2] * 100).toFixed(2);
     }
 
-    // 全局变量
+    // 计算用户总资产
+    function calculateTotalAsset(userData) {
+        if (!userData) return 0;
+        const positionsValue = Object.entries(userData.positions || {}).reduce((sum, [sym, pos]) => sum + pos.quantity * getCurrentPrice(sym), 0);
+        return (userData.cash || 0) + positionsValue;
+    }
+
+    // 计算投资统计
+    function calculateStats(userData) {
+        let totalCost = 0, totalValue = 0;
+        Object.entries(userData.positions || {}).forEach(([sym, pos]) => {
+            totalCost += pos.quantity * pos.avgCost;
+            totalValue += pos.quantity * getCurrentPrice(sym);
+        });
+        const totalProfit = totalValue - totalCost;
+        const profitRate = totalCost > 0 ? (totalProfit / totalCost * 100) : 0;
+        
+        let bestStock = { sym: '-', profit: -Infinity };
+        Object.entries(userData.positions || {}).forEach(([sym, pos]) => {
+            const profit = pos.quantity * (getCurrentPrice(sym) - pos.avgCost);
+            if (profit > bestStock.profit) bestStock = { sym, profit };
+        });
+        
+        return { totalProfit, profitRate, bestStock: bestStock.profit > 0 ? bestStock.sym : '-' };
+    }
+
+    // ==================== 排行榜 ====================
+    async function renderRanking() {
+        const container = document.getElementById('rankContainer');
+        if (!container) return;
+        container.innerHTML = '<div class="loading-spinner">加载排行榜...</div>';
+        
+        const users = await getAllUsers();
+        const currentUsername = sessionStorage.getItem('currentUser') ? JSON.parse(sessionStorage.getItem('currentUser')).username : null;
+        
+        const rankings = users.map(user => ({
+            username: user.username,
+            totalAsset: calculateTotalAsset(user)
+        })).sort((a, b) => b.totalAsset - a.totalAsset);
+        
+        if (rankings.length === 0) {
+            container.innerHTML = '<div style="padding:16px;text-align:center;color:#aaa;">暂无其他用户</div>';
+            return;
+        }
+        
+        let html = '';
+        rankings.slice(0, 10).forEach((user, idx) => {
+            const isCurrent = user.username === currentUsername;
+            html += `<div class="${isCurrent ? 'rank-current' : 'rank-item'}">
+                        <span class="rank-number">${idx + 1}</span>
+                        <span class="rank-name">${user.username}${isCurrent ? ' (你)' : ''}</span>
+                        <span class="rank-asset">$${user.totalAsset.toFixed(2)}</span>
+                    </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    // ==================== DeepSeek AI 教学 ====================
+    async function getAIAdvice() {
+        const userData = await getCurrentUserFromGitHub();
+        if (!userData) return "请先登录";
+        
+        const totalAsset = calculateTotalAsset(userData);
+        const stats = calculateStats(userData);
+        const positions = userData.positions || {};
+        
+        let positionsStr = Object.keys(positions).length === 0 ? "暂无持仓" : 
+            Object.entries(positions).map(([sym, pos]) => {
+                const currentPx = getCurrentPrice(sym);
+                const profit = (currentPx - pos.avgCost) * pos.quantity;
+                return `${sym}: ${pos.quantity}股, 成本$${pos.avgCost}, 现价$${currentPx}, 盈亏$${profit.toFixed(2)}`;
+            }).join('\n');
+        
+        const prompt = `你是一位专业的股票投资顾问。请基于以下用户数据给出简短的投资建议（100字以内）：
+
+用户总资产: $${totalAsset.toFixed(2)}
+总盈亏: $${stats.totalProfit.toFixed(2)} (${stats.profitRate.toFixed(2)}%)
+持仓情况:
+${positionsStr}
+
+请给出：1) 风险评估 2) 操作建议 3) 投资心态提醒。要求专业、简洁、实用。`;
+        
+        try {
+            const response = await fetch(DEEPSEEK_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
+                body: JSON.stringify({
+                    model: 'deepseek-chat',
+                    messages: [{ role: 'user', content: prompt }],
+                    temperature: 0.7,
+                    max_tokens: 500
+                })
+            });
+            
+            const data = await response.json();
+            if (data.choices && data.choices[0]) {
+                return data.choices[0].message.content;
+            } else {
+                return "AI 服务暂时不可用，请稍后再试。";
+            }
+        } catch (error) {
+            console.error('AI 调用失败:', error);
+            return "网络错误，无法获取 AI 建议。";
+        }
+    }
+
+    // ==================== UI 渲染 ====================
     let currentActiveSymbol = "AAPL";
     let chartInstance = null;
-    let currentUserWatchlist = [];
-    let currentUserData = null;  // 存储完整用户数据 { username, cash, positions, watchlist }
-    
-    // 更新右侧持仓UI
-    function renderPortfolio() {
+    let currentUserData = null;
+
+    async function renderPortfolio() {
         if (!currentUserData) return;
         const positions = currentUserData.positions || {};
         const container = document.getElementById('positionsContainer');
-        if (!container) return;
-        const hasPositions = Object.keys(positions).length > 0;
-        if (!hasPositions) {
-            container.innerHTML = '<div style="text-align:center;color:#aaa;padding:12px;">暂无持仓，请买入股票</div>';
+        if (Object.keys(positions).length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#aaa;padding:12px;">暂无持仓</div>';
         } else {
             let html = '';
             for (const [sym, pos] of Object.entries(positions)) {
                 const currentPx = getCurrentPrice(sym);
-                const marketValue = pos.quantity * currentPx;
-                const costValue = pos.quantity * pos.avgCost;
-                const profit = marketValue - costValue;
-                const profitPct = (profit / costValue * 100).toFixed(2);
-                html += `<div class="position-item">
-                            <div><strong>${sym}</strong><br><span style="font-size:0.7rem;">${pos.quantity}股</span></div>
-                            <div style="text-align:right;">
-                                <div>$${currentPx.toFixed(2)}</div>
-                                <div class="${profit>=0?'positive':'negative'}">${profit>=0?'+':''}$${profit.toFixed(2)} (${profitPct}%)</div>
-                            </div>
-                         </div>`;
+                const profit = (currentPx - pos.avgCost) * pos.quantity;
+                html += `<div class="position-item"><div><strong>${sym}</strong><br>${pos.quantity}股</div>
+                        <div style="text-align:right;">$${currentPx.toFixed(2)}<br>
+                        <span class="${profit>=0?'positive':'negative'}">${profit>=0?'+':''}$${profit.toFixed(2)}</span></div></div>`;
             }
             container.innerHTML = html;
         }
-        const totalAsset = currentUserData.cash + Object.entries(currentUserData.positions).reduce((sum, [sym, pos]) => sum + pos.quantity * getCurrentPrice(sym), 0);
+        
+        const totalAsset = calculateTotalAsset(currentUserData);
         document.getElementById('totalAsset').innerHTML = `$${totalAsset.toFixed(2)}`;
         document.getElementById('availableCash').innerHTML = `$${currentUserData.cash.toFixed(2)}`;
+        
+        // 更新统计
+        const stats = calculateStats(currentUserData);
+        document.getElementById('totalProfit').innerHTML = `${stats.totalProfit>=0?'+':''}$${stats.totalProfit.toFixed(2)}`;
+        document.getElementById('bestStock').innerHTML = stats.bestStock;
+        
+        // 今日盈亏（模拟，基于最近价格变化）
+        let todayProfit = 0;
+        Object.entries(positions).forEach(([sym, pos]) => {
+            const change = parseFloat(getChangePercent(sym));
+            todayProfit += pos.quantity * getCurrentPrice(sym) * (change / 100);
+        });
+        document.getElementById('todayProfit').innerHTML = `${todayProfit>=0?'+':''}$${todayProfit.toFixed(2)}`;
+        document.getElementById('todayProfit').className = todayProfit >= 0 ? 'positive' : 'negative';
+        
+        let winRate = 0;
+        if (currentUserData.tradeHistory && currentUserData.tradeHistory.length > 0) {
+            const wins = currentUserData.tradeHistory.filter(t => t.profit > 0).length;
+            winRate = (wins / currentUserData.tradeHistory.length * 100).toFixed(0);
+        }
+        document.getElementById('winRate').innerHTML = `${winRate}%`;
     }
-    
-    // 执行交易
-    function executeTrade(symbol, type, quantity) {
+
+    function renderWatchlist() {
+        const container = document.getElementById('watchlistContainer');
+        if (!currentUserData?.watchlist?.length) {
+            container.innerHTML = '<div style="padding:20px;text-align:center;color:#aaa;">暂无自选，去搜索添加</div>';
+            return;
+        }
+        container.innerHTML = '';
+        currentUserData.watchlist.forEach(sym => {
+            const price = getCurrentPrice(sym);
+            const change = getChangePercent(sym);
+            const div = document.createElement('div');
+            div.className = `watchlist-item ${currentActiveSymbol === sym ? 'active' : ''}`;
+            div.innerHTML = `<div><div class="watchlist-symbol">${sym}</div><div style="font-size:0.7rem;color:#aaa;">${stockDB[sym]?.name || ''}</div></div>
+                            <div style="text-align:right;"><div class="watchlist-price">$${price.toFixed(2)}</div>
+                            <div class="${parseFloat(change)>=0?'positive':'negative'}">${parseFloat(change)>=0?'+':''}${change}%</div></div>
+                            <button class="remove-stock" data-symbol="${sym}">✕</button>`;
+            div.addEventListener('click', (e) => { if (!e.target.classList.contains('remove-stock')) { currentActiveSymbol = sym; renderWatchlist(); renderChart(sym); updateCurrentDisplay(); } });
+            div.querySelector('.remove-stock').addEventListener('click', async (e) => {
+                e.stopPropagation();
+                currentUserData.watchlist = currentUserData.watchlist.filter(s => s !== sym);
+                await syncUserToGitHub(currentUserData);
+                if (currentActiveSymbol === sym && currentUserData.watchlist.length) currentActiveSymbol = currentUserData.watchlist[0];
+                renderWatchlist();
+                if (currentActiveSymbol) { renderChart(currentActiveSymbol); updateCurrentDisplay(); }
+                await renderRanking();
+            });
+            container.appendChild(div);
+        });
+    }
+
+    function renderChart(symbol) {
+        const kdata = getKline(symbol);
+        if (chartInstance) chartInstance.dispose();
+        const dom = document.getElementById('klineChart');
+        chartInstance = echarts.init(dom);
+        chartInstance.setOption({
+            tooltip: { trigger: 'axis' },
+            xAxis: { type: 'category', data: kdata.map(v => v[0]), axisLabel: { rotate: 30, color: '#aaa' } },
+            yAxis: { scale: true, axisLabel: { color: '#ddd' } },
+            series: [{ type: 'candlestick', data: kdata.map(v => [v[1], v[2], v[3], v[4]]), itemStyle: { color: '#00c853', color0: '#ff3b30' } }],
+            backgroundColor: 'transparent'
+        });
+    }
+
+    function updateCurrentDisplay() {
+        document.getElementById('currentSymbol').innerText = currentActiveSymbol;
+        document.getElementById('currentPrice').innerText = `$${getCurrentPrice(currentActiveSymbol).toFixed(2)}`;
+        const change = getChangePercent(currentActiveSymbol);
+        document.getElementById('currentChange').innerHTML = `${parseFloat(change)>=0?'+':''}${change}%`;
+        document.getElementById('currentChange').className = parseFloat(change) >= 0 ? 'positive' : 'negative';
+        document.getElementById('tradeSymbol').innerHTML = `当前: ${currentActiveSymbol} $${getCurrentPrice(currentActiveSymbol).toFixed(2)}`;
+    }
+
+    async function executeTrade(symbol, type, quantity) {
         if (!currentUserData) return "用户未登录";
         const price = getCurrentPrice(symbol);
         if (isNaN(quantity) || quantity <= 0) return "请输入有效数量";
+        
         if (type === 'buy') {
             const cost = price * quantity;
             if (currentUserData.cash < cost) return `资金不足，需要 $${cost.toFixed(2)}`;
@@ -750,12 +987,12 @@
             if (!currentUserData.positions[symbol]) currentUserData.positions[symbol] = { quantity: 0, avgCost: 0 };
             const pos = currentUserData.positions[symbol];
             const newQuantity = pos.quantity + quantity;
-            const newAvgCost = (pos.quantity * pos.avgCost + cost) / newQuantity;
+            pos.avgCost = (pos.quantity * pos.avgCost + cost) / newQuantity;
             pos.quantity = newQuantity;
-            pos.avgCost = newAvgCost;
-            syncUserToStorage(currentUserData);
-            renderPortfolio();
-            return `成功买入 ${quantity} 股 ${symbol} @ $${price.toFixed(2)}`;
+            await syncUserToGitHub(currentUserData);
+            await renderPortfolio();
+            await renderRanking();
+            return `✅ 成功买入 ${quantity} 股 ${symbol} @ $${price.toFixed(2)}`;
         } else if (type === 'sell') {
             const pos = currentUserData.positions[symbol];
             if (!pos || pos.quantity < quantity) return `持仓不足，当前持有 ${pos?.quantity || 0} 股`;
@@ -763,129 +1000,39 @@
             currentUserData.cash += revenue;
             pos.quantity -= quantity;
             if (pos.quantity === 0) delete currentUserData.positions[symbol];
-            syncUserToStorage(currentUserData);
-            renderPortfolio();
-            return `成功卖出 ${quantity} 股 ${symbol} @ $${price.toFixed(2)}`;
+            await syncUserToGitHub(currentUserData);
+            await renderPortfolio();
+            await renderRanking();
+            return `✅ 成功卖出 ${quantity} 股 ${symbol} @ $${price.toFixed(2)}`;
         }
         return "无效操作";
     }
-    
-    // 刷新UI (自选&K线)
-    function renderWatchlist() {
-        const container = document.getElementById('watchlistContainer');
-        if (!container) return;
-        if (!currentUserWatchlist.length) {
-            container.innerHTML = '<div style="padding:20px;text-align:center;color:#aaa;">暂无自选，去搜索添加</div>';
-            return;
-        }
-        container.innerHTML = '';
-        currentUserWatchlist.forEach(sym => {
-            const price = getCurrentPrice(sym);
-            const change = parseFloat(getChangePercent(sym));
-            const changeStr = (change > 0 ? '+' : '') + change.toFixed(2) + '%';
-            const changeClass = change >= 0 ? 'positive' : 'negative';
-            const div = document.createElement('div');
-            div.className = `watchlist-item ${currentActiveSymbol === sym ? 'active' : ''}`;
-            div.innerHTML = `
-                <div class="watchlist-item-info">
-                    <div class="watchlist-symbol">${sym}</div>
-                    <div class="watchlist-name">${stockDB[sym]?.name || sym}</div>
-                </div>
-                <div class="watchlist-quote">
-                    <div class="watchlist-price">$${price.toFixed(2)}</div>
-                    <div class="watchlist-change ${changeClass}">${changeStr}</div>
-                </div>
-                <button class="remove-stock" data-symbol="${sym}">✕</button>
-            `;
-            div.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remove-stock')) return;
-                currentActiveSymbol = sym;
-                renderWatchlist();
-                renderChart(sym);
-                document.getElementById('currentSymbol').innerText = sym;
-                document.getElementById('tradeSymbol').innerHTML = `当前: ${sym} $${getCurrentPrice(sym).toFixed(2)}`;
-                document.getElementById('tradeMessage').innerText = '';
-            });
-            const removeBtn = div.querySelector('.remove-stock');
-            removeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const newList = currentUserWatchlist.filter(s => s !== sym);
-                if (updateCurrentUserWatchlist(newList)) {
-                    currentUserWatchlist = newList;
-                    if (currentActiveSymbol === sym && currentUserWatchlist.length) {
-                        currentActiveSymbol = currentUserWatchlist[0];
-                        renderChart(currentActiveSymbol);
-                        document.getElementById('currentSymbol').innerText = currentActiveSymbol;
-                        document.getElementById('tradeSymbol').innerHTML = `当前: ${currentActiveSymbol} $${getCurrentPrice(currentActiveSymbol).toFixed(2)}`;
-                    } else if (currentUserWatchlist.length === 0) {
-                        currentActiveSymbol = "AAPL";
-                        renderChart("AAPL");
-                        document.getElementById('currentSymbol').innerText = "AAPL";
-                        document.getElementById('tradeSymbol').innerHTML = `当前: AAPL $${getCurrentPrice("AAPL").toFixed(2)}`;
-                    }
-                    renderWatchlist();
-                }
-            });
-            container.appendChild(div);
-        });
-    }
-    
-    function renderChart(symbol) {
-        const kdata = getKline(symbol);
-        const dates = kdata.map(item => item[0]);
-        const values = kdata.map(item => [item[1], item[2], item[3], item[4]]);
-        if (chartInstance) chartInstance.dispose();
-        const dom = document.getElementById('klineChart');
-        chartInstance = echarts.init(dom);
-        chartInstance.setOption({
-            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-            xAxis: { type: 'category', data: dates, axisLabel: { rotate: 30, color: '#aaa' } },
-            yAxis: { scale: true, axisLabel: { color: '#ddd' }, splitLine: { lineStyle: { color: '#222' } } },
-            series: [{
-                type: 'candlestick', data: values,
-                itemStyle: { color: '#00c853', color0: '#ff3b30', borderColor: '#00c853', borderColor0: '#ff3b30' }
-            }],
-            grid: { containLabel: true, left: '10%', right: '8%', top: 20, bottom: 20 },
-            backgroundColor: 'transparent'
-        });
-        window.addEventListener('resize', () => chartInstance && chartInstance.resize());
-        const latestPrice = getCurrentPrice(symbol);
-        const changePct = getChangePercent(symbol);
-        document.getElementById('currentPrice').innerText = `$${latestPrice.toFixed(2)}`;
-        const changeSpan = document.getElementById('currentChange');
-        changeSpan.innerText = `${changePct}%`;
-        changeSpan.className = parseFloat(changePct) >= 0 ? 'positive' : 'negative';
-        document.getElementById('tradeSymbol').innerHTML = `当前: ${symbol} $${latestPrice.toFixed(2)}`;
-    }
-    
-    function addToWatchlist(symbol) {
-        if (!currentUserWatchlist.includes(symbol)) {
-            const newList = [...currentUserWatchlist, symbol];
-            if (updateCurrentUserWatchlist(newList)) {
-                currentUserWatchlist = newList;
-                renderWatchlist();
-                return true;
-            }
+
+    async function addToWatchlist(symbol) {
+        if (!currentUserData.watchlist.includes(symbol)) {
+            currentUserData.watchlist.push(symbol);
+            await syncUserToGitHub(currentUserData);
+            renderWatchlist();
+            return true;
         }
         return false;
     }
-    
+
     function performSearch(query) {
-        const upperQuery = query.toUpperCase();
-        if (!query) return [];
-        return Object.keys(stockDB).filter(sym => sym.toUpperCase().includes(upperQuery) || (stockDB[sym]?.name || '').toUpperCase().includes(upperQuery));
+        const upper = query.toUpperCase();
+        return Object.keys(stockDB).filter(s => s.toUpperCase().includes(upper) || stockDB[s].name.toUpperCase().includes(upper));
     }
-    
+
     function renderSearchResults(results) {
         const container = document.getElementById('searchResults');
         if (!results.length) { container.classList.remove('show'); return; }
-        container.innerHTML = results.map(sym => `<div class="search-result-item" data-symbol="${sym}"><div><span class="result-symbol">${sym}</span><span class="result-name"> ${stockDB[sym]?.name || ''}</span></div><div class="result-market">${stockDB[sym]?.market || ''}</div></div>`).join('');
+        container.innerHTML = results.map(sym => `<div class="search-result-item" data-symbol="${sym}"><span>${sym}</span><span style="font-size:0.7rem;">${stockDB[sym].name}</span></div>`).join('');
         container.querySelectorAll('.search-result-item').forEach(el => {
             el.addEventListener('click', () => {
                 const sym = el.getAttribute('data-symbol');
                 currentActiveSymbol = sym;
-                document.getElementById('currentSymbol').innerText = sym;
                 renderChart(sym);
+                updateCurrentDisplay();
                 renderWatchlist();
                 document.getElementById('globalSearchInput').value = '';
                 container.classList.remove('show');
@@ -893,83 +1040,62 @@
         });
         container.classList.add('show');
     }
-    
-    // 登录后初始化
-    function initAfterLogin(username) {
-        const fullUser = findUser(username);
-        if (!fullUser) return;
-        currentUserData = JSON.parse(JSON.stringify(fullUser));
-        currentUserWatchlist = [...(fullUser.watchlist || ["AAPL", "TSLA"])];
+
+    async function initAfterLogin(username) {
+        currentUserData = await fetchUserFile(username);
+        if (!currentUserData) return;
         document.getElementById('displayUsername').innerText = username;
         document.getElementById('tradingApp').style.display = 'block';
         document.getElementById('authOverlay').style.display = 'none';
-        currentActiveSymbol = currentUserWatchlist.length ? currentUserWatchlist[0] : "AAPL";
-        document.getElementById('currentSymbol').innerText = currentActiveSymbol;
+        
+        currentActiveSymbol = currentUserData.watchlist?.length ? currentUserData.watchlist[0] : "AAPL";
         renderChart(currentActiveSymbol);
+        updateCurrentDisplay();
         renderWatchlist();
-        renderPortfolio();
+        await renderPortfolio();
+        await renderRanking();
         
         document.getElementById('addCurrentToWatchlist').onclick = () => addToWatchlist(currentActiveSymbol);
-        document.getElementById('logoutBtn').onclick = () => logout();
-        document.getElementById('buyBtn').onclick = () => {
-            const qty = parseFloat(document.getElementById('tradeQuantity').value);
-            const msg = executeTrade(currentActiveSymbol, 'buy', qty);
-            document.getElementById('tradeMessage').innerText = msg;
-            renderPortfolio();
-            renderWatchlist(); // 刷新自选股价格
-            renderChart(currentActiveSymbol); // 刷新图表价格显示
-        };
-        document.getElementById('sellBtn').onclick = () => {
-            const qty = parseFloat(document.getElementById('tradeQuantity').value);
-            const msg = executeTrade(currentActiveSymbol, 'sell', qty);
-            document.getElementById('tradeMessage').innerText = msg;
-            renderPortfolio();
-            renderWatchlist();
-            renderChart(currentActiveSymbol);
-        };
+        document.getElementById('refreshRankBtn').onclick = () => renderRanking();
+        document.getElementById('logoutBtn').onclick = () => { sessionStorage.removeItem('currentUser'); document.getElementById('authOverlay').style.display = 'flex'; document.getElementById('tradingApp').style.display = 'none'; };
+        document.getElementById('buyBtn').onclick = async () => { const msg = await executeTrade(currentActiveSymbol, 'buy', parseFloat(document.getElementById('tradeQuantity').value)); document.getElementById('tradeMessage').innerText = msg; setTimeout(() => document.getElementById('tradeMessage').innerText = '', 3000); renderWatchlist(); updateCurrentDisplay(); };
+        document.getElementById('sellBtn').onclick = async () => { const msg = await executeTrade(currentActiveSymbol, 'sell', parseFloat(document.getElementById('tradeQuantity').value)); document.getElementById('tradeMessage').innerText = msg; setTimeout(() => document.getElementById('tradeMessage').innerText = '', 3000); renderWatchlist(); updateCurrentDisplay(); };
+        document.getElementById('askAiBtn').onclick = async () => { const aiDiv = document.getElementById('aiMessage'); aiDiv.innerHTML = '<div class="ai-loading">🤖 AI 正在分析你的投资组合...</div>'; const advice = await getAIAdvice(); aiDiv.innerHTML = advice; };
         
         const searchInput = document.getElementById('globalSearchInput');
-        const clearBtn = document.getElementById('clearSearchBtn');
-        searchInput.addEventListener('input', (e) => {
-            const val = e.target.value.trim();
-            if (val === '') { document.getElementById('searchResults').classList.remove('show'); return; }
-            renderSearchResults(performSearch(val).slice(0, 8));
-        });
-        clearBtn.addEventListener('click', () => { searchInput.value = ''; document.getElementById('searchResults').classList.remove('show'); });
-        document.addEventListener('click', function(e) {
-            if (!searchInput.contains(e.target) && !document.getElementById('searchResults').contains(e.target)) {
-                document.getElementById('searchResults').classList.remove('show');
-            }
-        });
+        searchInput.addEventListener('input', (e) => { const val = e.target.value.trim(); if (!val) { document.getElementById('searchResults').classList.remove('show'); return; } renderSearchResults(performSearch(val).slice(0, 6)); });
+        document.addEventListener('click', (e) => { if (!searchInput.contains(e.target)) document.getElementById('searchResults').classList.remove('show'); });
     }
-    
+
     function bindAuthEvents() {
         const loginTab = document.querySelector('[data-tab="login"]'), regTab = document.querySelector('[data-tab="register"]');
         const loginDiv = document.getElementById('loginForm'), regDiv = document.getElementById('registerForm');
-        loginTab.addEventListener('click', () => { loginTab.classList.add('active'); regTab.classList.remove('active'); loginDiv.style.display = 'flex'; regDiv.style.display = 'none'; });
-        regTab.addEventListener('click', () => { regTab.classList.add('active'); loginTab.classList.remove('active'); loginDiv.style.display = 'none'; regDiv.style.display = 'flex'; });
-        document.getElementById('doLoginBtn').addEventListener('click', () => {
-            const username = document.getElementById('loginUsername').value.trim(), pwd = document.getElementById('loginPassword').value;
-            const res = loginUser(username, pwd);
-            if (res.success) initAfterLogin(username);
-            else document.getElementById('loginError').innerText = res.msg || "登录失败";
-        });
-        document.getElementById('doRegisterBtn').addEventListener('click', () => {
-            const username = document.getElementById('regUsername').value.trim(), pwd = document.getElementById('regPassword').value;
-            const regRes = registerUser(username, pwd);
-            if (regRes.success) { alert("注册成功，请登录"); loginTab.click(); document.getElementById('loginUsername').value = username; document.getElementById('loginPassword').value = ''; document.getElementById('regError').innerText = ''; }
-            else document.getElementById('regError').innerText = regRes.msg;
-        });
+        loginTab.onclick = () => { loginTab.classList.add('active'); regTab.classList.remove('active'); loginDiv.style.display = 'flex'; regDiv.style.display = 'none'; };
+        regTab.onclick = () => { regTab.classList.add('active'); loginTab.classList.remove('active'); loginDiv.style.display = 'none'; regDiv.style.display = 'flex'; };
+        
+        document.getElementById('doLoginBtn').onclick = async () => {
+            const res = await loginUser(document.getElementById('loginUsername').value.trim(), document.getElementById('loginPassword').value);
+            if (res.success) await initAfterLogin(document.getElementById('loginUsername').value.trim());
+            else document.getElementById('loginError').innerText = res.msg;
+        };
+        document.getElementById('doRegisterBtn').onclick = async () => {
+            const res = await registerUser(document.getElementById('regUsername').value.trim(), document.getElementById('regPassword').value);
+            if (res.success) alert("注册成功，请登录");
+            else document.getElementById('regError').innerText = res.msg;
+        };
     }
-    
-    initUserDatabase();
+
+    async function checkSession() {
+        const saved = sessionStorage.getItem('currentUser');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (await fetchUserFile(parsed.username)) await initAfterLogin(parsed.username);
+            else sessionStorage.removeItem('currentUser');
+        }
+    }
+
     bindAuthEvents();
-    const savedUser = sessionStorage.getItem('currentUser');
-    if (savedUser) {
-        const parsed = JSON.parse(savedUser);
-        if (findUser(parsed.username)) initAfterLogin(parsed.username);
-        else { sessionStorage.removeItem('currentUser'); document.getElementById('authOverlay').style.display = 'flex'; }
-    } else { document.getElementById('authOverlay').style.display = 'flex'; }
+    checkSession();
 </script>
 </body>
 </html>
