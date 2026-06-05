@@ -6,10 +6,10 @@
     "TSLA",
     "MSFT"
   ],
-  "cash": 99688.77,
+  "cash": 68877,
   "positions": {
     "AAPL": {
-      "quantity": 1,
+      "quantity": 100,
       "avgCost": 311.23
     }
   },
