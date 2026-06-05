@@ -6,7 +6,12 @@
     "TSLA",
     "MSFT"
   ],
-  "cash": 100000,
-  "positions": {},
+  "cash": 99688.77,
+  "positions": {
+    "AAPL": {
+      "quantity": 1,
+      "avgCost": 311.23
+    }
+  },
   "tradeHistory": []
 }
